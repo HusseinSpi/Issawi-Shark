@@ -1,5 +1,11 @@
-import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
+import Cookies from "js-cookie";
 import NavbarAndFooter from "./components/NavbarAndFooter/NavbarAndFooter";
 import HomePage from "./pages/HomePage/HomePage";
 import { NoMatch } from "./pages/noMatch/NoMatch";
@@ -11,76 +17,108 @@ import Account from "./pages/Account/Account";
 import Teams from "./pages/Teams/Teams";
 import Project from "./pages/project/Project";
 import Message from "./pages/message/Message";
-import useCookie from "./hooks/useCookie";
 
 const App: React.FC = () => {
-  const userToken = useCookie("userToken");
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [token, setToken] = useState<string>("");
 
-  console.log(userToken);
+  useEffect(() => {
+    const userToken = Cookies.get("jwt");
+    if (userToken) {
+      setToken(userToken);
+      setIsAuthenticated(true);
+      console.log(isAuthenticated);
+      console.log(token);
+    }
+  }, []);
+
+  const PrivateRouteOne = ({ children }: { children: JSX.Element }) => {
+    return isAuthenticated ? <Navigate to="/programs" /> : children;
+  };
+
+  const PrivateRouteTwo = ({ children }: { children: JSX.Element }) => {
+    return !isAuthenticated ? <Navigate to="/sign-in" /> : children;
+  };
 
   const routes = [
     {
       path: "/",
       element: (
-        <NavbarAndFooter>
-          <HomePage />
-        </NavbarAndFooter>
+        <PrivateRouteOne>
+          <NavbarAndFooter>
+            <HomePage />
+          </NavbarAndFooter>
+        </PrivateRouteOne>
       ),
     },
     {
       path: "sign-up",
       element: (
-        <NavbarAndFooter>
-          <SignUpPage />
-        </NavbarAndFooter>
+        <PrivateRouteOne>
+          <NavbarAndFooter>
+            <SignUpPage />
+          </NavbarAndFooter>
+        </PrivateRouteOne>
       ),
     },
     {
       path: "sign-in",
       element: (
-        <NavbarAndFooter>
-          <SignInPage />
-        </NavbarAndFooter>
+        <PrivateRouteOne>
+          <NavbarAndFooter>
+            <SignInPage />
+          </NavbarAndFooter>
+        </PrivateRouteOne>
       ),
     },
     {
       path: "programs",
       element: (
-        <Sidebar>
-          <Programs />
-        </Sidebar>
+        <PrivateRouteTwo>
+          <Sidebar>
+            <Programs />
+          </Sidebar>
+        </PrivateRouteTwo>
       ),
     },
     {
       path: "teams",
       element: (
-        <Sidebar>
-          <Teams />
-        </Sidebar>
+        <PrivateRouteTwo>
+          <Sidebar>
+            <Teams />
+          </Sidebar>
+        </PrivateRouteTwo>
       ),
     },
     {
       path: "project",
       element: (
-        <Sidebar>
-          <Project />
-        </Sidebar>
+        <PrivateRouteTwo>
+          <Sidebar>
+            <Project />
+          </Sidebar>
+        </PrivateRouteTwo>
       ),
     },
     {
       path: "message",
       element: (
-        <Sidebar>
-          <Message />
-        </Sidebar>
+        <PrivateRouteTwo>
+          <Sidebar>
+            <Message />
+          </Sidebar>
+        </PrivateRouteTwo>
       ),
     },
     {
       path: "account",
       element: (
-        <Sidebar>
-          <Account />
-        </Sidebar>
+        <PrivateRouteTwo>
+          <Sidebar>
+            <Account />
+          </Sidebar>
+        </PrivateRouteTwo>
       ),
     },
     {

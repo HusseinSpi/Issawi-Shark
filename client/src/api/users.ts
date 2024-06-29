@@ -41,6 +41,7 @@ export const signUp = async (
     const response = await axios.post(url, data);
     console.log("Signup successful:", response.data);
     toast.success("Signup successful!");
+    window.location.reload();
     return response.data;
   } catch (error: unknown) {
     toast.error("Failed to sign up");
@@ -56,6 +57,7 @@ export const login = async (
   try {
     const response = await axios.post(url, data);
     toast.success("Login successful!");
+    window.location.reload();
     return response.data;
   } catch (error: unknown) {
     toast.error("Failed to login");
