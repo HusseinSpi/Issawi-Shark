@@ -1,12 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import {
-  fetchUsers,
-  fetchUser,
-  fetchUserData,
-  signUpUser,
-  loginUser,
-  getCurrentUser,
-} from "../thunk/userThunks";
+import { signUpUser, loginUser, getCurrentUser } from "../thunk/userThunks";
 
 const userSlice = createSlice({
   name: "user",
@@ -18,33 +11,6 @@ const userSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(fetchUsers.pending, (state) => {
-        state.status = "loading";
-      })
-      .addCase(fetchUsers.fulfilled, (state, action) => {
-        state.status = "succeeded";
-        state.data = action.payload;
-      })
-      .addCase(fetchUsers.rejected, (state, action) => {
-        state.status = "failed";
-        state.error = action.error.message;
-      })
-      .addCase(fetchUser.fulfilled, (state, action) => {
-        state.data = action.payload;
-        state.status = "succeeded";
-      })
-      .addCase(fetchUser.rejected, (state, action) => {
-        state.status = "failed";
-        state.error = action.error.message;
-      })
-      .addCase(fetchUserData.fulfilled, (state, action) => {
-        state.data = action.payload;
-        state.status = "succeeded";
-      })
-      .addCase(fetchUserData.rejected, (state, action) => {
-        state.status = "failed";
-        state.error = action.error.message;
-      })
       .addCase(signUpUser.fulfilled, (state, action) => {
         state.data = action.payload;
         state.status = "succeeded";

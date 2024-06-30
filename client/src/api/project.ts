@@ -2,8 +2,8 @@ import axios from "axios";
 
 axios.defaults.withCredentials = true;
 
-export const getAllProjects = async () => {
-  const url = "http://localhost:8000/api/v1/projects";
+const getAllProjects = async () => {
+  const url = "projects";
   try {
     const response = await axios.get(url);
     return response.data;
@@ -12,3 +12,5 @@ export const getAllProjects = async () => {
     return null;
   }
 };
+
+export default getAllProjects;

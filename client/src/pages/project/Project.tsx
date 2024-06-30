@@ -1,25 +1,28 @@
-import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { fetchUser } from "../../redux/thunk/userThunks";
-import { RootState } from "../../redux/store/store";
+import React, { useEffect, useState } from "react";
+import getAllProjects from "../../api/project";
 
 const Project: React.FC = () => {
-  const dispatch = useDispatch();
-  const {
-    data: user,
-    status,
-    error,
-  } = useSelector((state: RootState) => state.user);
+  const [user, setUser] = useState<any>(null);
+  const [status, setStatus] = useState<
+    "idle" | "loading" | "succeeded" | "failed"
+  >("idle");
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    dispatch(fetchUser());
-  }, [dispatch]);
+    const fetchData = async () => {
+      setStatus("loading");
+      const data = await getAllProjects();
+      if (data) {
+        setUser(data);
+        setStatus("succeeded");
+      } else {
+        setStatus("failed");
+        setError("Failed to fetch projects");
+      }
+    };
 
-  useEffect(() => {
-    if (user) {
-      console.log(user);
-    }
-  }, [user]);
+    fetchData();
+  }, []);
 
   return (
     <div>

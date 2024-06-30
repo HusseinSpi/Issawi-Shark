@@ -1,6 +1,6 @@
 import { FC, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchUserData } from "../../redux/thunk/userThunks";
+import { fetchUsersData } from "../../redux/thunk/userThunks";
 import { RootState } from "../../redux/store/store";
 
 interface User {
@@ -18,7 +18,7 @@ const OurTeam: FC = () => {
   } = useSelector((state: RootState) => state.user);
 
   useEffect(() => {
-    dispatch(fetchUserData());
+    dispatch(fetchUsersData());
   }, [dispatch]);
 
   const people: User[] = (users?.data.users || [])

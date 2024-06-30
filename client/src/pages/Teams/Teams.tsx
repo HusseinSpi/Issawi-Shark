@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchUsers } from "../../redux/thunk/userThunks";
+import { fetchUsersData } from "../../redux/thunk/userThunks";
 import { RootState } from "../../redux/store/store";
 
 interface User {
@@ -18,10 +18,10 @@ const Teams = () => {
   } = useSelector((state: RootState) => state.user);
 
   useEffect(() => {
-    dispatch(fetchUsers());
+    dispatch(fetchUsersData());
   }, [dispatch]);
 
-  const people: User[] = (users?.data.users || [])
+  const people: User[] = (users?.data?.users || [])
     .filter((user: User) => user.role === "investor")
     .map((user: User) => ({
       userName: user.userName,

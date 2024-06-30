@@ -9,14 +9,14 @@ import Cookies from "js-cookie";
 import NavbarAndFooter from "./components/NavbarAndFooter/NavbarAndFooter";
 import HomePage from "./pages/HomePage/HomePage";
 import { NoMatch } from "./pages/noMatch/NoMatch";
-import { SignUpPage } from "./pages/Signup/Login/Signup";
-import { SignInPage } from "./pages/Signup/Login/Login";
 import Programs from "./pages/Programs/Programs";
 import Sidebar from "./components/sidebar/Sidebar";
 import Account from "./pages/Account/Account";
 import Teams from "./pages/Teams/Teams";
 import Project from "./pages/project/Project";
 import Message from "./pages/message/Message";
+import { SignUpPage } from "./pages/Signup/Signup";
+import { SignInPage } from "./pages/Login/Login";
 
 const App: React.FC = () => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
