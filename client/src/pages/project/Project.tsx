@@ -1,28 +1,34 @@
-import { getUser } from "../../api/users";
-import { useState, useEffect } from "react";
-import { useUserContext } from "../../context/UserContext";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchUser } from "../../redux/thunk/userThunks";
+import { RootState } from "../../redux/store/store";
 
 const Project: React.FC = () => {
-  const [user, setUser] = useState<string>("");
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const userData = await getUser();
-        if (userData) {
-          setUser(userData);
-        }
-      } catch (error) {
-        console.error("Failed to fetch user:", error);
-      }
-    };
-    fetchUser();
-  }, []);
+  const dispatch = useDispatch();
+  const {
+    data: user,
+    status,
+    error,
+  } = useSelector((state: RootState) => state.user);
 
   useEffect(() => {
-    console.log(user);
+    dispatch(fetchUser());
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (user) {
+      console.log(user);
+    }
   }, [user]);
 
-  return <div>Project:</div>;
+  return (
+    <div>
+      Project:
+      {status === "loading" && <p>Loading...</p>}
+      {status === "failed" && <p>Error: {error}</p>}
+      {status === "succeeded" && user && <p>{user.userName}</p>}
+    </div>
+  );
 };
 
 export default Project;

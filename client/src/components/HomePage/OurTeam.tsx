@@ -1,6 +1,7 @@
-import { FC, useEffect, useState } from "react";
-import { userData } from "../../api/users";
-import { useUserContext } from "../../context/userContext";
+import { FC, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchUserData } from "../../redux/thunk/userThunks";
+import { RootState } from "../../redux/store/store";
 
 interface User {
   userName: string;
@@ -9,27 +10,24 @@ interface User {
 }
 
 const OurTeam: FC = () => {
-  const [people, setPeople] = useState<User[]>([]);
-  // const {} = useUserContext();
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const users = await userData();
-        const usersList = users.data.users
-          .filter((user: User) => user.role === "investor")
-          .map((user: User) => ({
-            userName: user.userName,
-            role: user.role,
-            photo: user.photo,
-          }));
-        setPeople(usersList);
-      } catch (error) {
-        console.error("Error fetching user data:", error);
-      }
-    };
+  const dispatch = useDispatch();
+  const {
+    data: users,
+    status,
+    error,
+  } = useSelector((state: RootState) => state.user);
 
-    fetchData();
-  }, []);
+  useEffect(() => {
+    dispatch(fetchUserData());
+  }, [dispatch]);
+
+  const people: User[] = (users?.data.users || [])
+    .filter((user: User) => user.role === "investor")
+    .map((user: User) => ({
+      userName: user.userName,
+      role: user.role,
+      photo: user.photo,
+    }));
 
   return (
     <div className="bg-white py-24 sm:py-32">
@@ -47,25 +45,28 @@ const OurTeam: FC = () => {
           role="list"
           className="grid gap-x-8 gap-y-12 sm:grid-cols-2 sm:gap-y-16 xl:col-span-2"
         >
-          {people.map((person) => (
-            <li key={person.userName}>
-              <div className="flex items-center gap-x-6">
-                <img
-                  className="h-16 w-16 rounded-full"
-                  src={person.photo}
-                  alt={person.userName}
-                />
-                <div>
-                  <h3 className="text-base font-semibold leading-7 tracking-tight text-primaryColor">
-                    {person.userName}
-                  </h3>
-                  <p className="text-sm font-semibold leading-6 text-secondaryColor">
-                    {person.role}
-                  </p>
+          {status === "loading" && <p>Loading...</p>}
+          {status === "failed" && <p>Error: {error}</p>}
+          {status === "succeeded" &&
+            people.map((person) => (
+              <li key={person.userName}>
+                <div className="flex items-center gap-x-6">
+                  <img
+                    className="h-16 w-16 rounded-full"
+                    src={person.photo}
+                    alt={person.userName}
+                  />
+                  <div>
+                    <h3 className="text-base font-semibold leading-7 tracking-tight text-primaryColor">
+                      {person.userName}
+                    </h3>
+                    <p className="text-sm font-semibold leading-6 text-secondaryColor">
+                      {person.role}
+                    </p>
+                  </div>
                 </div>
-              </div>
-            </li>
-          ))}
+              </li>
+            ))}
         </ul>
       </div>
     </div>

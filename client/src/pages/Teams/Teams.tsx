@@ -1,5 +1,7 @@
-import { useState, useEffect } from "react";
-import { userData } from "../../api/users";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchUsers } from "../../redux/thunk/userThunks";
+import { RootState } from "../../redux/store/store";
 
 interface User {
   userName: string;
@@ -8,27 +10,24 @@ interface User {
 }
 
 const Teams = () => {
-  const [people, setPeople] = useState<User[]>([]);
+  const dispatch = useDispatch();
+  const {
+    data: users,
+    status,
+    error,
+  } = useSelector((state: RootState) => state.user);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const users = await userData();
-        const usersList = users.data.users
-          .filter((user: User) => user.role === "investor")
-          .map((user: User) => ({
-            userName: user.userName,
-            role: user.role,
-            photo: user.photo,
-          }));
-        setPeople(usersList);
-      } catch (error) {
-        console.error("Error fetching user data:", error);
-      }
-    };
+    dispatch(fetchUsers());
+  }, [dispatch]);
 
-    fetchData();
-  }, []);
+  const people: User[] = (users?.data.users || [])
+    .filter((user: User) => user.role === "investor")
+    .map((user: User) => ({
+      userName: user.userName,
+      role: user.role,
+      photo: user.photo,
+    }));
 
   return (
     <section className="text-center p-10">
@@ -38,20 +37,23 @@ const Teams = () => {
         unlock great creativity around every turn.
       </p>
       <div className="flex flex-wrap justify-center">
-        {people.map((person) => (
-          <div
-            key={person.userName}
-            className="m-4 text-center transform hover:scale-105 transition-transform"
-          >
-            <img
-              className="w-36 h-36 rounded-full object-cover mx-auto"
-              src={person.photo}
-              alt={person.userName}
-            />
-            <h2 className="text-xl font-semibold mt-4">{person.userName}</h2>
-            <p className="text-gray-600">{person.role}</p>
-          </div>
-        ))}
+        {status === "loading" && <p>Loading...</p>}
+        {status === "failed" && <p>Error: {error}</p>}
+        {status === "succeeded" &&
+          people.map((person) => (
+            <div
+              key={person.userName}
+              className="m-4 text-center transform hover:scale-105 transition-transform"
+            >
+              <img
+                className="w-36 h-36 rounded-full object-cover mx-auto"
+                src={person.photo}
+                alt={person.userName}
+              />
+              <h2 className="text-xl font-semibold mt-4">{person.userName}</h2>
+              <p className="text-gray-600">{person.role}</p>
+            </div>
+          ))}
       </div>
     </section>
   );
