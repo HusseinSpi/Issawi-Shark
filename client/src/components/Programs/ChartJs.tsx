@@ -79,18 +79,6 @@ const ChartJs: React.FC = () => {
       { name: "Education I", value: 4 },
       { name: "Education J", value: 5 },
     ],
-    Retail: [
-      { name: "Retail A", value: 4 },
-      { name: "Retail B", value: 3.3 },
-      { name: "Retail C", value: 6.7 },
-      { name: "Retail D", value: 2 },
-      { name: "Retail E", value: 5 },
-      { name: "Retail F", value: 7.8 },
-      { name: "Retail G", value: 8.4 },
-      { name: "Retail H", value: 6.1 },
-      { name: "Retail I", value: 3.7 },
-      { name: "Retail J", value: 9 },
-    ],
   };
 
   const [selectedCategory, setSelectedCategory] =

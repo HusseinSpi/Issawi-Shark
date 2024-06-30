@@ -1,5 +1,6 @@
 import { FC, useEffect, useState } from "react";
 import { userData } from "../../api/users";
+import { useUserContext } from "../../context/userContext";
 
 interface User {
   userName: string;
@@ -9,7 +10,7 @@ interface User {
 
 const OurTeam: FC = () => {
   const [people, setPeople] = useState<User[]>([]);
-
+  // const {} = useUserContext();
   useEffect(() => {
     const fetchData = async () => {
       try {

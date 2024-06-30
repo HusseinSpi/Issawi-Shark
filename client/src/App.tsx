@@ -20,12 +20,10 @@ import Message from "./pages/message/Message";
 
 const App: React.FC = () => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
-  // const [token, setToken] = useState<string>("");
 
   useEffect(() => {
     const userToken = Cookies.get("jwt");
     if (userToken) {
-      // setToken(userToken);
       setIsAuthenticated(true);
     }
   }, []);
