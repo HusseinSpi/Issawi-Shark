@@ -1,50 +1,90 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { getAllProjects } from "../../redux/thunk/projectThunks";
-import ProjectDev from "../../components/Programs/ProjectsDev";
+import { getCurrentUser } from "../../redux/thunk/userThunks";
+import { RootState } from "../../redux/store";
+import ProgramsNavBar from "../../components/Programs/ProgramsNavBar";
 
 interface User {
+  _id: string;
   userName: string;
+  email: string;
   role: string;
   photo: string;
 }
 
-const Project: React.FC = () => {
-  const [user, setUser] = useState<User | null>(null);
-  const [status, setStatus] = useState<
-    "idle" | "loading" | "succeeded" | "failed"
-  >("idle");
-  const [error, setError] = useState<string | null>(null);
+interface Project {
+  title: string;
+  description: string;
+  github: string;
+  user: User;
+  categories: string[];
+  rating: number;
+}
+
+const Programs: React.FC = () => {
+  const dispatch = useDispatch();
+  const projects = useSelector((state: RootState) => state.project);
+  const user = useSelector((state: RootState) => state.user);
 
   useEffect(() => {
-    const fetchData = async () => {
-      setStatus("loading");
-      try {
-        const data = await getAllProjects();
-        if (data) {
-          setUser(data);
-          setStatus("succeeded");
-        } else {
-          setStatus("failed");
-          setError("Failed to fetch projects");
-        }
-      } catch (err) {
-        setStatus("failed");
-        setError("Failed to fetch projects");
-      }
-    };
+    dispatch(getAllProjects());
+    dispatch(getCurrentUser());
+  }, [dispatch]);
 
-    fetchData();
-  }, []);
+  // Ensure data is available before accessing it
+  const userData = user.data?.data?.user;
+  const projectData = projects.data;
+
+  if (!userData || !projectData) {
+    return <div>Loading...</div>; // Show a loading message or spinner
+  }
+
+  const projectUser = projectData.filter(
+    (project: Project) => project.user._id === userData._id
+  );
 
   return (
-    <div>
-      Project:
-      {status === "loading" && <p>Loading...</p>}
-      {status === "failed" && <p>Error: {error}</p>}
-      {status === "succeeded" && user && <p>{user.userName}</p>}
-      <ProjectDev />
-    </div>
+    <>
+      <ProgramsNavBar />
+      <div className="container mx-auto px-4">
+        <h1 className="text-2xl font-bold my-4">My Projects</h1>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {projectUser.map((project: Project) => (
+            <div
+              key={project.title}
+              className="bg-white p-6 rounded-lg shadow-lg"
+            >
+              <h2 className="text-xl font-semibold mb-2">{project.title}</h2>
+              <p className="text-gray-700 mb-4">{project.description}</p>
+              <a
+                href={project.github}
+                className="text-blue-500 hover:underline"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                View on GitHub
+              </a>
+              <div className="mt-4">
+                <h3 className="text-md font-medium">Categories:</h3>
+                <ul className="list-disc list-inside">
+                  {project.categories.map((category, index) => (
+                    <li key={index} className="text-gray-600">
+                      {category}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div className="mt-4">
+                <span className="text-md font-medium">Rating:</span>{" "}
+                {project.rating}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </>
   );
 };
 
-export default Project;
+export default Programs;

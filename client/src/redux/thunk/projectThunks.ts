@@ -8,7 +8,7 @@ export const getAllProjects = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await axios.get("projects");
-      console.log(response.data);
+      // console.log(response.data);
       return response.data.data;
     } catch (error) {
       console.error("Error fetching projects:", error);

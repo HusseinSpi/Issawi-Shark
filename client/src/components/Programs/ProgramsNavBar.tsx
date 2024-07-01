@@ -1,16 +1,35 @@
 import { FaRegBell, FaSearch } from "react-icons/fa";
-import { FC } from "react";
+import { FC, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getCurrentUser } from "../../redux/thunk/userThunks";
+import { getCurrentUser } from "../../redux/thunk/navbarThunks";
 import { RootState } from "../../redux/store/store";
+
+interface User {
+  userName: string;
+  email: string;
+  role: string;
+  photo?: string;
+}
 
 const ProgramsNavBar: FC = () => {
   const dispatch = useDispatch();
   const {
-    data: users,
+    data: userData,
     status,
     error,
-  } = useSelector((state: RootState) => state.user);
+  } = useSelector((state: RootState) => state.navbar);
+
+  useEffect(() => {
+    dispatch(getCurrentUser());
+  }, [dispatch]);
+
+  // console.log(userData);
+  const person: User = userData?.data.user || {
+    userName: "",
+    email: "",
+    role: "",
+  };
+
   return (
     <div className="flex justify-between items-center p-4 bg-gray-100 shadow-md">
       <div className="flex items-center">
@@ -24,9 +43,12 @@ const ProgramsNavBar: FC = () => {
         </div>
       </div>
       <div className="flex items-center gap-5">
-        <span className="text-gray-700">email@example.com</span>
+        <span className="text-gray-700">{person.email}</span>
         <img
-          src="https://images.unsplash.com/photo-1600486913747-55e5470d6f40?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80"
+          src={
+            person.photo ||
+            "https://images.unsplash.com/photo-1600486913747-55e5470d6f40?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80"
+          }
           alt="Profile"
           className="w-10 h-10 rounded-full object-cover"
         />
@@ -35,4 +57,5 @@ const ProgramsNavBar: FC = () => {
     </div>
   );
 };
+
 export default ProgramsNavBar;
