@@ -1,7 +1,16 @@
 import { FaRegBell, FaSearch } from "react-icons/fa";
 import { FC } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { getCurrentUser } from "../../redux/thunk/userThunks";
+import { RootState } from "../../redux/store/store";
 
 const ProgramsNavBar: FC = () => {
+  const dispatch = useDispatch();
+  const {
+    data: users,
+    status,
+    error,
+  } = useSelector((state: RootState) => state.user);
   return (
     <div className="flex justify-between items-center p-4 bg-gray-100 shadow-md">
       <div className="flex items-center">

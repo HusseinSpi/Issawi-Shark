@@ -1,5 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { signUpUser, loginUser, getCurrentUser } from "../thunk/userThunks";
+import {
+  signUpUser,
+  loginUser,
+  fetchUsersData,
+  getCurrentUser,
+} from "../thunk/userThunks";
 
 const userSlice = createSlice({
   name: "user",
@@ -11,6 +16,17 @@ const userSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
+      .addCase(fetchUsersData.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(fetchUsersData.fulfilled, (state, action) => {
+        state.data = action.payload;
+        state.status = "succeeded";
+      })
+      .addCase(fetchUsersData.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      })
       .addCase(signUpUser.fulfilled, (state, action) => {
         state.data = action.payload;
         state.status = "succeeded";
@@ -26,6 +42,9 @@ const userSlice = createSlice({
       .addCase(loginUser.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
+      })
+      .addCase(getCurrentUser.pending, (state) => {
+        state.status = "loading";
       })
       .addCase(getCurrentUser.fulfilled, (state, action) => {
         state.data = action.payload;

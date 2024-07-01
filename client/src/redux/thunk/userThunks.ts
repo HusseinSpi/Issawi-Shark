@@ -8,10 +8,25 @@ export const fetchUsersData = createAsyncThunk(
   "user/fetchUsersData",
   async () => {
     try {
-      const response = await axios.get("/api/v1/users");
-      return response.data;
+      const response = await axios.get("users");
+      const users = response.data;
+      return users;
     } catch (error) {
       toast.error("Failed to fetch users data");
+      throw error;
+    }
+  }
+);
+
+export const getCurrentUser = createAsyncThunk(
+  "user/getCurrentUser",
+  async () => {
+    try {
+      const response = await axios.get("users/me");
+      console.log(response.data);
+      return response.data;
+    } catch (error) {
+      toast.error("Failed to get current user");
       throw error;
     }
   }
@@ -46,10 +61,7 @@ export const signUpUser = createAsyncThunk(
       photo,
     };
     try {
-      const response = await axios.post(
-        "http://localhost:8000/api/v1/users/signup",
-        data
-      );
+      const response = await axios.post("users/signup", data);
       toast.success("Signup successful!");
       window.location.reload();
       return response.data;
@@ -65,28 +77,12 @@ export const loginUser = createAsyncThunk(
   async ({ email, password }: { email: string; password: string }) => {
     const data = { email, password };
     try {
-      const response = await axios.post(
-        "http://localhost:8000/api/v1/users/login",
-        data
-      );
+      const response = await axios.post("users/login", data);
       toast.success("Login successful!");
       window.location.reload();
       return response.data;
     } catch (error) {
       toast.error("Login failed");
-      throw error;
-    }
-  }
-);
-
-export const getCurrentUser = createAsyncThunk(
-  "user/getCurrentUser",
-  async () => {
-    try {
-      const response = await axios.get("http://localhost:8000/api/v1/users/me");
-      return response.data;
-    } catch (error) {
-      toast.error("Failed to get current user");
       throw error;
     }
   }

@@ -1,6 +1,6 @@
 import ChartJs from "../../components/Programs/ChartJs";
 import ProgramsNavBar from "../../components/Programs/ProgramsNavBar";
-// import Projects from "../../components/Programs/Projects";
+import ProjectDev from "../../components/Programs/ProjectsDev";
 import { FC } from "react";
 
 const Programs: FC = () => {
@@ -8,7 +8,7 @@ const Programs: FC = () => {
     <>
       <ProgramsNavBar />
       <ChartJs />
-      {/* <Projects /> */}
+      <ProjectDev />
     </>
   );
 };

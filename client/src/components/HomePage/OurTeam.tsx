@@ -27,7 +27,8 @@ const OurTeam: FC = () => {
       userName: user.userName,
       role: user.role,
       photo: user.photo,
-    }));
+    }))
+    .slice(0, 6);
 
   return (
     <div className="bg-white py-24 sm:py-32">
