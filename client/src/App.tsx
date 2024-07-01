@@ -9,14 +9,15 @@ import Cookies from "js-cookie";
 import NavbarAndFooter from "./components/NavbarAndFooter/NavbarAndFooter";
 import HomePage from "./pages/HomePage/HomePage";
 import { NoMatch } from "./pages/noMatch/NoMatch";
-import Programs from "./pages/Programs/Programs";
+import General from "./pages/General/General";
 import Sidebar from "./components/sidebar/Sidebar";
 import Account from "./pages/Account/Account";
 import Teams from "./pages/Teams/Teams";
-import Project from "./pages/project/Project";
+import MyProject from "./pages/MyProject/MyProject";
 import Message from "./pages/message/Message";
 import { SignUpPage } from "./pages/Signup/Signup";
 import { SignInPage } from "./pages/Login/Login";
+import ProjectPage from "./pages/ProjectPage/ProjectPage";
 
 const App: React.FC = () => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
@@ -29,7 +30,7 @@ const App: React.FC = () => {
   }, []);
 
   const PrivateRouteOne = ({ children }: { children: JSX.Element }) => {
-    return isAuthenticated ? <Navigate to="/programs" /> : children;
+    return isAuthenticated ? <Navigate to="/general" /> : children;
   };
 
   const PrivateRouteTwo = ({ children }: { children: JSX.Element }) => {
@@ -68,11 +69,11 @@ const App: React.FC = () => {
       ),
     },
     {
-      path: "programs",
+      path: "general",
       element: (
         <PrivateRouteTwo>
           <Sidebar>
-            <Programs />
+            <General />
           </Sidebar>
         </PrivateRouteTwo>
       ),
@@ -92,7 +93,17 @@ const App: React.FC = () => {
       element: (
         <PrivateRouteTwo>
           <Sidebar>
-            <Project />
+            <MyProject />
+          </Sidebar>
+        </PrivateRouteTwo>
+      ),
+    },
+    {
+      path: "project/:projectId",
+      element: (
+        <PrivateRouteTwo>
+          <Sidebar>
+            <ProjectPage />
           </Sidebar>
         </PrivateRouteTwo>
       ),

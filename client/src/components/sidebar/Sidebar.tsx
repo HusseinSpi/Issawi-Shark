@@ -25,7 +25,7 @@ const Sidebar: FC<SidebarAndFooterProps> = ({ children }) => {
           <ul className="mt-6 space-y-1">
             <li>
               <NavLink
-                to="/programs"
+                to="/general"
                 className={({ isActive }) =>
                   `flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium ml-4 h-11 ${
                     isActive

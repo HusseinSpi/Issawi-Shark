@@ -4,6 +4,7 @@ import { getAllProjects } from "../../redux/thunk/projectThunks";
 import { getCurrentUser } from "../../redux/thunk/userThunks";
 import { RootState } from "../../redux/store";
 import ProgramsNavBar from "../../components/Programs/ProgramsNavBar";
+import { useNavigate } from "react-router-dom";
 
 interface User {
   _id: string;
@@ -22,7 +23,8 @@ interface Project {
   rating: number;
 }
 
-const Programs: React.FC = () => {
+const MyProject: React.FC = () => {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const projects = useSelector((state: RootState) => state.project);
   const user = useSelector((state: RootState) => state.user);
@@ -32,12 +34,11 @@ const Programs: React.FC = () => {
     dispatch(getCurrentUser());
   }, [dispatch]);
 
-  // Ensure data is available before accessing it
   const userData = user.data?.data?.user;
   const projectData = projects.data;
 
   if (!userData || !projectData) {
-    return <div>Loading...</div>; // Show a loading message or spinner
+    return <div>Loading...</div>;
   }
 
   const projectUser = projectData.filter(
@@ -47,7 +48,10 @@ const Programs: React.FC = () => {
   return (
     <>
       <ProgramsNavBar />
-      <div className="container mx-auto px-4">
+      <div
+        className="container mx-auto px-4"
+        onClick={() => navigate(`/project/${userData._id}`)}
+      >
         <h1 className="text-2xl font-bold my-4">My Projects</h1>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {projectUser.map((project: Project) => (
@@ -87,4 +91,4 @@ const Programs: React.FC = () => {
   );
 };
 
-export default Programs;
+export default MyProject;

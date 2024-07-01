@@ -3,6 +3,7 @@ import { FC, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getCurrentUser } from "../../redux/thunk/navbarThunks";
 import { RootState } from "../../redux/store/store";
+import { useNavigate } from "react-router-dom";
 
 interface User {
   userName: string;
@@ -12,6 +13,7 @@ interface User {
 }
 
 const ProgramsNavBar: FC = () => {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const {
     data: userData,
@@ -42,7 +44,10 @@ const ProgramsNavBar: FC = () => {
           />
         </div>
       </div>
-      <div className="flex items-center gap-5">
+      <div
+        className="flex items-center gap-5"
+        onClick={() => navigate("/account")}
+      >
         <span className="text-gray-700">{person.email}</span>
         <img
           src={

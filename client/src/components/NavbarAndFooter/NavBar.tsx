@@ -23,7 +23,7 @@ const NavBar: FC = () => {
             Home
           </NavLink>
           <NavLink
-            to="/programs"
+            to="/general"
             className={({ isActive }) =>
               isActive
                 ? "font-bold bg-lightGray p-3 text-secondaryColor rounded-lg"

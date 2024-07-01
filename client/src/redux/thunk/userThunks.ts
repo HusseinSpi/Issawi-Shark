@@ -87,3 +87,15 @@ export const loginUser = createAsyncThunk(
     }
   }
 );
+
+export const updateUser = createAsyncThunk(
+  "user/updateUser",
+  async (userData, { rejectWithValue }) => {
+    try {
+      const response = await axios.patch("users/updateMe", userData);
+      return response.data.data.user;
+    } catch (error) {
+      return rejectWithValue(error.response.data.message);
+    }
+  }
+);
