@@ -55,8 +55,9 @@ const MyProject: React.FC = () => {
                 {project.title}
               </h2>
               <p className="text-gray-700 mb-4 break-words">
-                {project.description}
+                {project.description.substring(0, 100)}
               </p>
+
               <a
                 href={project.github}
                 className="text-blue-500 hover:underline"

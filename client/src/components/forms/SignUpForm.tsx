@@ -6,8 +6,22 @@ import { RootState } from "../../redux/store/store";
 import { MdOutlineAlternateEmail } from "react-icons/md";
 import { IoEyeOutline, IoEyeOffOutline } from "react-icons/io5";
 
+interface FormData {
+  userName: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+  passwordConfirm: string;
+  photo: string;
+  age: number;
+  github: string;
+  about: string;
+  role: string;
+}
+
 const SignUpForm: React.FC = () => {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormData>({
     userName: "",
     firstName: "",
     lastName: "",
@@ -15,18 +29,28 @@ const SignUpForm: React.FC = () => {
     password: "",
     passwordConfirm: "",
     photo: "",
+    age: 18,
+    github: "",
+    about: "",
+    role: "user",
   });
 
-  const [showPassword, setShowPassword] = useState(false);
+  const [showPassword, setShowPassword] = useState<boolean>(false);
   const dispatch = useDispatch();
   const user = useSelector((state: RootState) => state.user);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    >
+  ) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    console.log("Form Data:", formData);
+
     dispatch(signUpUser(formData))
       .unwrap()
       .then((response) => {
@@ -56,7 +80,7 @@ const SignUpForm: React.FC = () => {
           <input
             type="text"
             id="firstName"
-            name="firstName" // Added name attribute
+            name="firstName"
             value={formData.firstName}
             onChange={handleChange}
             className="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm"
@@ -72,7 +96,7 @@ const SignUpForm: React.FC = () => {
           <input
             type="text"
             id="lastName"
-            name="lastName" // Added name attribute
+            name="lastName"
             value={formData.lastName}
             onChange={handleChange}
             className="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm"
@@ -90,7 +114,7 @@ const SignUpForm: React.FC = () => {
           <input
             type="text"
             id="userName"
-            name="userName" // Added name attribute
+            name="userName"
             value={formData.userName}
             onChange={handleChange}
             className="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm"
@@ -105,7 +129,7 @@ const SignUpForm: React.FC = () => {
           <input
             type="text"
             id="photo"
-            name="photo" // Added name attribute
+            name="photo"
             value={formData.photo}
             onChange={handleChange}
             className="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm"
@@ -124,7 +148,7 @@ const SignUpForm: React.FC = () => {
           <input
             type="email"
             id="email"
-            name="email" // Added name attribute
+            name="email"
             value={formData.email}
             onChange={handleChange}
             className="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm"
@@ -147,7 +171,7 @@ const SignUpForm: React.FC = () => {
           <input
             type={showPassword ? "text" : "password"}
             id="password"
-            name="password" // Added name attribute
+            name="password"
             value={formData.password}
             onChange={handleChange}
             className="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm"
@@ -173,7 +197,7 @@ const SignUpForm: React.FC = () => {
           <input
             type={showPassword ? "text" : "password"}
             id="passwordConfirm"
-            name="passwordConfirm" // Added name attribute
+            name="passwordConfirm"
             value={formData.passwordConfirm}
             onChange={handleChange}
             className="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm"
@@ -188,6 +212,54 @@ const SignUpForm: React.FC = () => {
             {showPassword ? <IoEyeOffOutline /> : <IoEyeOutline />}
           </span>
         </div>
+      </div>
+
+      <div>
+        <label htmlFor="age" className="sr-only">
+          Age
+        </label>
+        <input
+          type="number"
+          id="age"
+          name="age"
+          value={formData.age}
+          onChange={handleChange}
+          className="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm"
+          placeholder="Enter your age"
+          min={18}
+          max={99}
+          required
+        />
+      </div>
+
+      <div>
+        <label htmlFor="github" className="sr-only">
+          GitHub Profile
+        </label>
+        <input
+          type="url"
+          id="github"
+          name="github"
+          value={formData.github}
+          onChange={handleChange}
+          className="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm"
+          placeholder="Enter GitHub profile URL"
+          required
+        />
+      </div>
+
+      <div>
+        <label htmlFor="about" className="sr-only">
+          About
+        </label>
+        <textarea
+          id="about"
+          name="about"
+          value={formData.about}
+          onChange={handleChange}
+          className="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm"
+          placeholder="Tell us about yourself"
+        />
       </div>
 
       <button

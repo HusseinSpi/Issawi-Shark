@@ -42,6 +42,9 @@ export const signUpUser = createAsyncThunk(
     password,
     passwordConfirm,
     photo,
+    age,
+    github,
+    about,
   }: {
     userName: string;
     firstName: string;
@@ -50,6 +53,9 @@ export const signUpUser = createAsyncThunk(
     password: string;
     passwordConfirm: string;
     photo: string;
+    age: number;
+    github: string;
+    about: string;
   }) => {
     const data = {
       firstName,
@@ -59,6 +65,9 @@ export const signUpUser = createAsyncThunk(
       password,
       passwordConfirm,
       photo,
+      age,
+      github,
+      about,
     };
     try {
       const response = await axios.post("users/signup", data);

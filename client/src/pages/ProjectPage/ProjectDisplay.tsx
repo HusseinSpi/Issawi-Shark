@@ -38,9 +38,11 @@ const ProjectDisplay: React.FC = () => {
 
   console.log(owner);
   return (
-    <div className="bg-white p-10 rounded-lg shadow-lg w-full max-w-6xl mx-auto">
+    <div className="bg-white p-10 px-32 rounded-lg shadow-lg w-full max-w-6xl mx-auto">
       <h1 className="text-4xl font-bold mb-4 break-words">{title}</h1>
-      <p className="text-gray-700 mb-6 break-words">{description}</p>
+      <p className="text-gray-700 mb-6 break-words whitespace-pre-line">
+        {description}
+      </p>
 
       <div className="mb-6">
         {categories.map((category) => (

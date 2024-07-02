@@ -80,11 +80,6 @@ const AddProject: React.FC = () => {
     );
   };
 
-  const handleTechnologiesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value.split(",").map((tech) => tech.trim());
-    setTechnologies(value);
-  };
-
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     const newProject = {
@@ -92,13 +87,15 @@ const AddProject: React.FC = () => {
       description,
       categories,
       github,
-      technologies: technologies.split(",").map((tech) => tech.trim()), // convert to array
+      technologies: technologies.split(",").map((tech) => tech.trim()),
       status: projectStatus,
       owner: currentUser._id,
       teamMembers: selectedUsers.map((user) => user._id),
     };
     dispatch(createProject(newProject));
   };
+
+  console.log("first \n second");
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -140,7 +137,6 @@ const AddProject: React.FC = () => {
             onChange={(e) => setDescription(e.target.value)}
             required
             minLength={100}
-            maxLength={500}
           />
         </div>
 
