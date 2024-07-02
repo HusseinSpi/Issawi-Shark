@@ -33,7 +33,7 @@ const ProjectDev: FC = () => {
               onClick={() => navigate(`/project/${project._id}`)}
             >
               <h1 className="text-2xl font-bold mb-2">{project.title}</h1>
-              <p className="mb-4">{project.description}</p>
+              <p className="mb-4">{project.description.substring(0, 300)}</p>
               <a
                 href={project.github}
                 target="_blank"

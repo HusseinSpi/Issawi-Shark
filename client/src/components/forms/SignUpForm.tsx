@@ -49,7 +49,7 @@ const SignUpForm: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Form Data:", formData);
+    // console.log("Form Data:", formData);
 
     dispatch(signUpUser(formData))
       .unwrap()

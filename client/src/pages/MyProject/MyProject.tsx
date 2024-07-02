@@ -21,8 +21,6 @@ const MyProject: React.FC = () => {
   const userData = user.data?.data?.user;
   const projectData = projects.data;
 
-  console.log(projectData);
-
   if (!userData || !projectData) {
     return <div>Loading...</div>;
   }

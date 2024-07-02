@@ -21,9 +21,6 @@ const Teams = () => {
   useEffect(() => {
     dispatch(fetchUsersData());
   }, [dispatch]);
-  useEffect(() => {
-    console.log(status);
-  }, [status]);
 
   const people: User[] = (users?.data?.users || [])
     .filter((user: User) => user.role === "investor")

@@ -23,7 +23,7 @@ export const getCurrentUser = createAsyncThunk(
   async () => {
     try {
       const response = await axios.get("users/me");
-      console.log(response.data);
+      // console.log(response.data);
       return response.data;
     } catch (error) {
       toast.error("Failed to get current user");
