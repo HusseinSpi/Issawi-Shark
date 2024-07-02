@@ -6,6 +6,7 @@ import { RootState } from "../../redux/store/store";
 import { useNavigate } from "react-router-dom";
 
 interface User {
+  _id: string;
   userName: string;
   email: string;
   role: string;
@@ -27,6 +28,7 @@ const ProgramsNavBar: FC = () => {
 
   // console.log(userData);
   const person: User = userData?.data.user || {
+    _id: "",
     userName: "",
     email: "",
     role: "",
@@ -46,7 +48,7 @@ const ProgramsNavBar: FC = () => {
       </div>
       <div
         className="flex items-center gap-5"
-        onClick={() => navigate("/account")}
+        onClick={() => navigate(`/${person._id}`)}
       >
         <span className="text-gray-700">{person.email}</span>
         <img

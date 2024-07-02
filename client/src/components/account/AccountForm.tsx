@@ -1,7 +1,13 @@
-import { FC, ChangeEvent } from "react";
+import { FC, useState, ChangeEvent } from "react";
 import { FaRegSave } from "react-icons/fa";
 import { MdEdit } from "react-icons/md";
+import Cookies from "js-cookie";
 import { User } from "../../types/User";
+import { toast } from "react-toastify";
+import { useDispatch } from "react-redux";
+import { updatePassword } from "../../redux/thunk/userThunks";
+import { AppDispatch } from "../../redux/store/store";
+import { useParams } from "react-router-dom";
 
 interface AccountFormProps {
   userDetails: User;
@@ -18,6 +24,13 @@ const AccountForm: FC<AccountFormProps> = ({
   setEditMode,
   handleSave,
 }) => {
+  const dispatch: AppDispatch = useDispatch();
+  const { userId } = useParams<{ userId: string }>();
+  const [changePassword, setChangePassword] = useState(false);
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+
   const handleEditClick = (field: keyof User) => {
     setEditMode({ ...editMode, [field]: !editMode[field] });
   };
@@ -25,6 +38,31 @@ const AccountForm: FC<AccountFormProps> = ({
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setUserDetails({ ...userDetails, [name]: value });
+  };
+
+  const handleLogOut = () => {
+    Cookies.remove("jwt");
+    window.location.reload();
+  };
+
+  const handlePasswordSave = async () => {
+    if (password !== confirmPassword) {
+      toast.error("Passwords do not match");
+      return;
+    }
+
+    try {
+      await dispatch(
+        updatePassword({ currentPassword, newPassword: password })
+      );
+      toast.success("Password updated successfully");
+      setChangePassword(false);
+      setCurrentPassword("");
+      setPassword("");
+      setConfirmPassword("");
+    } catch (error) {
+      toast.error("Failed to update password");
+    }
   };
 
   return (
@@ -86,14 +124,68 @@ const AccountForm: FC<AccountFormProps> = ({
             </div>
           ))}
 
-          <div className="flex justify-start">
-            <button className="bg-blue-600 text-white px-4 py-2 rounded">
-              Change Email
-            </button>
-          </div>
-          <div className="flex justify-start">
-            <button className="bg-blue-600 text-white px-4 py-2 rounded">
-              Change Password
+          <div className="flex flex-col items-start">
+            {changePassword ? (
+              <div className="flex flex-col w-full">
+                <div className="flex flex-col mb-4">
+                  <label className="block text-gray-600 mb-2">
+                    Current Password
+                  </label>
+                  <input
+                    type="password"
+                    name="currentPassword"
+                    value={currentPassword}
+                    onChange={(e) => setCurrentPassword(e.target.value)}
+                    className="block text-lg border rounded px-2 mb-2"
+                  />
+                </div>
+                <div className="flex flex-col mb-4">
+                  <label className="block text-gray-600 mb-2">
+                    New Password
+                  </label>
+                  <input
+                    type="password"
+                    name="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="block text-lg border rounded px-2 mb-2"
+                  />
+                </div>
+                <div className="flex flex-col mb-4">
+                  <label className="block text-gray-600 mb-2">
+                    Confirm Password
+                  </label>
+                  <input
+                    type="password"
+                    name="confirmPassword"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    className="block text-lg border rounded px-2 mb-2"
+                  />
+                </div>
+                <button
+                  type="button"
+                  onClick={handlePasswordSave}
+                  className="bg-blue-600 text-white px-4 py-2 rounded"
+                >
+                  Save Password
+                </button>
+              </div>
+            ) : (
+              <button
+                type="button"
+                onClick={() => setChangePassword(true)}
+                className="bg-blue-600 text-white px-4 py-2 rounded mb-4"
+              >
+                Change Password
+              </button>
+            )}
+            <button
+              type="button"
+              onClick={handleLogOut}
+              className="bg-red-600 text-white px-4 py-2 rounded"
+            >
+              LogOut
             </button>
           </div>
         </div>

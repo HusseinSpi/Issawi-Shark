@@ -92,9 +92,14 @@ const SignInForm: React.FC = () => {
       </button>
 
       <p className="text-center text-sm text-gray-500">
+        <Link className="underline" to="/forgot-password">
+          Forgot Password ?
+        </Link>
+      </p>
+
+      <p className="text-center text-sm text-gray-500">
         No account?
         <Link className="underline" to="/sign-up">
-          {" "}
           Sign up
         </Link>
       </p>

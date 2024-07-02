@@ -4,6 +4,16 @@ import { toast } from "react-toastify";
 
 axios.defaults.withCredentials = true;
 
+interface ForgotPasswordPayload {
+  email: string;
+}
+
+interface ResetPasswordData {
+  token: string;
+  password: string;
+  passwordConfirm: string;
+}
+
 export const fetchUsersData = createAsyncThunk(
   "user/fetchUsersData",
   async () => {
@@ -105,6 +115,59 @@ export const updateUser = createAsyncThunk(
       return response.data.data.user;
     } catch (error) {
       return rejectWithValue(error.response.data.message);
+    }
+  }
+);
+
+export const forgotPassword = createAsyncThunk(
+  "user/forgotPassword",
+  async ({ email }: ForgotPasswordPayload) => {
+    const data = { email };
+    console.log(data);
+    try {
+      const response = await axios.post("users/forgotPassword", data);
+      toast.success("Password reset email sent");
+      return response.data;
+    } catch (error) {
+      toast.error("Failed to send password reset email");
+      throw error;
+    }
+  }
+);
+
+export const resetPassword = createAsyncThunk(
+  "user/resetPassword",
+  async ({ resetToken, password, passwordConfirm }: ResetPasswordData) => {
+    const data = { password, passwordConfirm };
+    try {
+      const response = await axios.patch(
+        `users/resetPassword/${resetToken}`,
+        data
+      );
+      toast.success("Password reset successful");
+      return response.data;
+    } catch (error) {
+      toast.error("Failed to reset password");
+      throw error;
+    }
+  }
+);
+
+export const updatePassword = createAsyncThunk(
+  "user/updatePassword",
+  async (
+    passwords: { currentPassword: string; newPassword: string },
+    { rejectWithValue }
+  ) => {
+    try {
+      const response = await axios.post("/api/user/updatePassword", {
+        passwordCurrent: passwords.currentPassword,
+        password: passwords.newPassword,
+        passwordConfirm: passwords.newPassword,
+      });
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
     }
   }
 );

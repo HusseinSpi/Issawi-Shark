@@ -19,6 +19,8 @@ import { SignUpPage } from "./pages/Signup/Signup";
 import { SignInPage } from "./pages/Login/Login";
 import ProjectDisplay from "./pages/ProjectPage/ProjectDisplay";
 import AddProject from "./components/myProject/AddProject";
+import ForgotPasswordPage from "./pages/ForgotPasword/ForgotPassword";
+import ResetPassword from "./pages/ForgotPasword/ResetPassword";
 
 const App: React.FC = () => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
@@ -65,6 +67,26 @@ const App: React.FC = () => {
         <PrivateRouteOne>
           <NavbarAndFooter>
             <SignInPage />
+          </NavbarAndFooter>
+        </PrivateRouteOne>
+      ),
+    },
+    {
+      path: "forgot-password",
+      element: (
+        <PrivateRouteOne>
+          <NavbarAndFooter>
+            <ForgotPasswordPage />
+          </NavbarAndFooter>
+        </PrivateRouteOne>
+      ),
+    },
+    {
+      path: "reset-password/:resetToken",
+      element: (
+        <PrivateRouteOne>
+          <NavbarAndFooter>
+            <ResetPassword />
           </NavbarAndFooter>
         </PrivateRouteOne>
       ),
@@ -130,7 +152,7 @@ const App: React.FC = () => {
       ),
     },
     {
-      path: "account",
+      path: "/:userId",
       element: (
         <PrivateRouteTwo>
           <Sidebar>

@@ -5,6 +5,9 @@ import {
   fetchUsersData,
   getCurrentUser,
   updateUser,
+  forgotPassword,
+  resetPassword,
+  updatePassword,
 } from "../thunk/userThunks";
 
 const userSlice = createSlice({
@@ -60,6 +63,27 @@ const userSlice = createSlice({
         state.status = "succeeded";
       })
       .addCase(updateUser.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload;
+      })
+      .addCase(forgotPassword.fulfilled, (state) => {
+        state.status = "succeeded";
+      })
+      .addCase(forgotPassword.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload;
+      })
+      .addCase(resetPassword.fulfilled, (state) => {
+        state.status = "succeeded";
+      })
+      .addCase(resetPassword.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload;
+      })
+      .addCase(updatePassword.fulfilled, (state) => {
+        state.status = "succeeded";
+      })
+      .addCase(updatePassword.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.payload;
       });
