@@ -31,7 +31,6 @@ const SignUpForm: React.FC = () => {
       .unwrap()
       .then((response) => {
         toast.success("Signup successful!");
-        // Handle successful signup
       })
       .catch((error) => {
         toast.error("Failed to sign up");

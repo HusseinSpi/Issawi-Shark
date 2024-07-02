@@ -17,7 +17,8 @@ import MyProject from "./pages/MyProject/MyProject";
 import Message from "./pages/message/Message";
 import { SignUpPage } from "./pages/Signup/Signup";
 import { SignInPage } from "./pages/Login/Login";
-import ProjectPage from "./pages/ProjectPage/ProjectPage";
+import ProjectDisplay from "./pages/ProjectPage/ProjectDisplay";
+import AddProject from "./components/myProject/AddProject";
 
 const App: React.FC = () => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
@@ -103,7 +104,17 @@ const App: React.FC = () => {
       element: (
         <PrivateRouteTwo>
           <Sidebar>
-            <ProjectPage />
+            <ProjectDisplay />
+          </Sidebar>
+        </PrivateRouteTwo>
+      ),
+    },
+    {
+      path: "add-project",
+      element: (
+        <PrivateRouteTwo>
+          <Sidebar>
+            <AddProject />
           </Sidebar>
         </PrivateRouteTwo>
       ),

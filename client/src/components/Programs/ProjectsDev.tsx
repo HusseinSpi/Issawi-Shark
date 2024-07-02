@@ -2,23 +2,11 @@ import { FC, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllProjects } from "../../redux/thunk/projectThunks";
 import { RootState } from "../../redux/store/store";
-
-interface User {
-  userName: string;
-  role: string;
-  photo: string;
-}
-
-interface Project {
-  title: string;
-  description: string;
-  github: string;
-  user: User;
-  categories: string[];
-  rating: number;
-}
+import { Project } from "../../types/Project";
+import { useNavigate } from "react-router-dom";
 
 const ProjectDev: FC = () => {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const {
     data: projects = [],
@@ -31,42 +19,36 @@ const ProjectDev: FC = () => {
   }, [dispatch]);
 
   return (
-    <section className="pt-16 border-t-2 border-gray-200">
+    <section className="pt-16 w-full px-4">
       {status === "loading" && <p>Loading...</p>}
       {status === "failed" && <p>Error: {error}</p>}
       {status === "succeeded" && projects.length > 0 ? (
         projects.map((project: Project, index: number) => (
           <div
             key={index}
-            className="bg-gray-800 w-3/4 mx-auto p-12 text-gray-100 rounded-lg shadow-lg mb-10"
+            className="bg-white border border-gray-300 w-full p-6 text-gray-800 rounded-lg shadow-md mb-6"
+            style={{ overflowWrap: "break-word", wordBreak: "break-word" }}
+            onClick={() => navigate(`/project/${project._id}`)}
           >
-            <div className="flex justify-between mb-8">
-              <h1 className="text-xl">{project.title}</h1>
-              <h2>{project.user.userName}</h2>
-            </div>
-            <p>{project.description}</p>
-            <div className="flex justify-between mt-10">
-              <div className="flex gap-5">
+            <h1 className="text-2xl font-bold mb-2">{project.title}</h1>
+            <p className="mb-4">{project.description}</p>
+            <a
+              href={project.github}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-600 hover:underline mb-4 block"
+            >
+              View on GitHub
+            </a>
+            <div className="mb-4">
+              <h2 className="text-lg font-semibold mb-1">Categories:</h2>
+              <ul className="list-disc list-inside">
                 {project.categories.map((category, i) => (
-                  <span
-                    key={i}
-                    className="inline-block bg-gray-500 text-white px-3 py-1 rounded-full text-xs"
-                  >
-                    {category}
-                  </span>
+                  <li key={i}>{category}</li>
                 ))}
-              </div>
-              <a
-                href={project.github}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <button className="border border-white p-2 rounded-lg text-white hover:bg-white hover:text-gray-800">
-                  Github
-                </button>
-              </a>
-              <p>{project.rating}</p>
+              </ul>
             </div>
+            <p className="font-semibold">Rating: {project.rating}</p>
           </div>
         ))
       ) : (

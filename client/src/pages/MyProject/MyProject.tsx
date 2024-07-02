@@ -5,23 +5,7 @@ import { getCurrentUser } from "../../redux/thunk/userThunks";
 import { RootState } from "../../redux/store";
 import ProgramsNavBar from "../../components/Programs/ProgramsNavBar";
 import { useNavigate } from "react-router-dom";
-
-interface User {
-  _id: string;
-  userName: string;
-  email: string;
-  role: string;
-  photo: string;
-}
-
-interface Project {
-  title: string;
-  description: string;
-  github: string;
-  user: User;
-  categories: string[];
-  rating: number;
-}
+import { Project } from "../../types/Project";
 
 const MyProject: React.FC = () => {
   const navigate = useNavigate();
@@ -37,30 +21,42 @@ const MyProject: React.FC = () => {
   const userData = user.data?.data?.user;
   const projectData = projects.data;
 
+  console.log(projectData);
+
   if (!userData || !projectData) {
     return <div>Loading...</div>;
   }
 
   const projectUser = projectData.filter(
-    (project: Project) => project.user._id === userData._id
+    (project: Project) => project.owner._id === userData._id
   );
 
   return (
     <>
       <ProgramsNavBar />
-      <div
-        className="container mx-auto px-4"
-        onClick={() => navigate(`/project/${userData._id}`)}
-      >
-        <h1 className="text-2xl font-bold my-4">My Projects</h1>
+      <div className="container mx-auto px-4">
+        <div className="flex justify-between items-center my-4">
+          <h1 className="text-2xl font-bold">My Projects</h1>
+          <button
+            onClick={() => navigate("/add-project")}
+            className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
+          >
+            Add Project
+          </button>
+        </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {projectUser.map((project: Project) => (
             <div
               key={project.title}
-              className="bg-white p-6 rounded-lg shadow-lg"
+              className="bg-white p-6 rounded-lg shadow-lg break-words"
+              onClick={() => navigate(`/project/${project._id}`)}
             >
-              <h2 className="text-xl font-semibold mb-2">{project.title}</h2>
-              <p className="text-gray-700 mb-4">{project.description}</p>
+              <h2 className="text-xl font-semibold mb-2 truncate">
+                {project.title}
+              </h2>
+              <p className="text-gray-700 mb-4 break-words">
+                {project.description}
+              </p>
               <a
                 href={project.github}
                 className="text-blue-500 hover:underline"

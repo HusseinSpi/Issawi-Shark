@@ -52,8 +52,22 @@ const projectSchema = new mongoose.Schema(
       type: Date,
       default: Date.now,
     },
-    user: {
+    technologies: {
+      type: [String],
+      required: true,
+    },
+    status: {
+      type: String,
+      enum: ["pending", "in progress", "completed"],
+      required: true,
+    },
+    owner: {
       type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
+    teamMembers: {
+      type: [mongoose.Schema.Types.ObjectId],
       ref: "User",
       required: true,
     },
@@ -66,7 +80,10 @@ const projectSchema = new mongoose.Schema(
 
 projectSchema.pre(/^find/, function (next) {
   this.populate({
-    path: "user",
+    path: "owner",
+    select: "userName photo email role",
+  }).populate({
+    path: "teamMembers",
     select: "userName photo email role",
   });
   next();

@@ -56,6 +56,23 @@ const userSchema = new mongoose.Schema({
     enum: ["user", "investor", "admin"],
     default: "user",
   },
+  about: {
+    type: String,
+    trim: true,
+    default: "Hello, I use Issawi-Shark",
+  },
+  age: {
+    type: Number,
+    min: [18, "Users must be at least 18 years old"],
+    max: [99, "Users must be at most 99 years old"],
+    required: true,
+  },
+  github: {
+    type: String,
+    match: /https?:\/\/(www\.)?github\.com\/\S+/,
+    trim: true,
+    required: true,
+  },
   passwordResetToken: String,
   passwordResetExpires: Date,
 });

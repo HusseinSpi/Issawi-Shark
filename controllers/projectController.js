@@ -18,3 +18,16 @@ exports.createProject = catchAsync(async (req, res, next) => {
     data: newProject,
   });
 });
+
+exports.getProject = catchAsync(async (req, res, next) => {
+  const project = await Project.findById(req.params.id).populate({
+    path: "user",
+  });
+  if (!project) {
+    return next(new AppError("Project not found", 404));
+  }
+  res.status(200).json({
+    status: "success",
+    data: project,
+  });
+});

@@ -8,7 +8,7 @@ const General: FC = () => {
     <>
       <ProgramsNavBar />
       <ChartJs />
-      <ProjectDev />
+      {/* <ProjectDev /> */}
     </>
   );
 };
