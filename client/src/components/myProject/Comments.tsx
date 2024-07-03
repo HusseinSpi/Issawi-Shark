@@ -1,8 +1,15 @@
 import { useDispatch, useSelector } from "react-redux";
-import { getAllComments, createComment } from "../../redux/thunk/commentThunks";
+import {
+  getAllComments,
+  createComment,
+  updateComment,
+  likeComment,
+} from "../../redux/thunk/commentThunks";
+import { updateProject } from "../../redux/thunk/projectThunks";
 import { RootState } from "../../redux/store/store";
 import { useEffect, FC, useState, FormEvent } from "react";
 import { CiStar } from "react-icons/ci";
+import { AiFillLike } from "react-icons/ai";
 
 interface CommentsProps {
   projectId: string;
@@ -14,10 +21,18 @@ const Comments: FC<CommentsProps> = ({ projectId }) => {
   const currentUser = useSelector((state: RootState) => state.navbar);
   const [commentContent, setCommentContent] = useState<string>("");
   const [rating, setRating] = useState<number>(0);
+  const [pushComment, setPushComment] = useState<boolean>(false);
 
   useEffect(() => {
     dispatch(getAllComments());
   }, [dispatch]);
+
+  useEffect(() => {
+    if (pushComment) {
+      dispatch(getAllComments());
+      setPushComment(false);
+    }
+  }, [dispatch, pushComment]);
 
   const allComments = comment.data || [];
   const allCommentsForProject = allComments.filter(
@@ -26,22 +41,42 @@ const Comments: FC<CommentsProps> = ({ projectId }) => {
 
   const currentUserId = currentUser.data?.data?.user._id;
 
-  const handleCommentSubmit = (e: FormEvent) => {
+  const handleCommentSubmit = async (e: FormEvent) => {
     e.preventDefault();
     if (currentUserId) {
-      dispatch(
-        createComment({
-          content: commentContent,
-          user: currentUserId,
-          project: projectId,
-          rating,
-        })
+      const existingComment = allCommentsForProject.find(
+        (comment) => comment.user._id === currentUserId
       );
+      if (existingComment) {
+        await dispatch(
+          updateComment({
+            id: existingComment._id,
+            content: commentContent,
+            rating,
+          })
+        );
+      } else {
+        await dispatch(
+          createComment({
+            content: commentContent,
+            user: currentUserId,
+            project: projectId,
+            rating,
+          })
+        );
+      }
+      await dispatch(updateProject(projectId));
       setCommentContent("");
       setRating(0);
+      setPushComment(true);
     } else {
       alert("You must be logged in to post a comment");
     }
+  };
+
+  const handleLike = async (commentId: string) => {
+    await dispatch(likeComment(commentId));
+    setPushComment(true);
   };
 
   return (
@@ -100,6 +135,28 @@ const Comments: FC<CommentsProps> = ({ projectId }) => {
                   Published: {new Date(comment.createdAt).toLocaleDateString()}
                 </span>
               </p>
+              <div className="flex items-center">
+                <AiFillLike
+                  className={`w-6 h-6 cursor-pointer ${
+                    comment.likes && comment.likes.includes(currentUserId)
+                      ? "text-blue-500"
+                      : "text-gray-300"
+                  }`}
+                  onClick={() => handleLike(comment._id)}
+                />
+                <span className="ml-2">{comment.likes?.length || 0}</span>
+              </div>
+              {comment.user._id === currentUserId && (
+                <button
+                  onClick={() => {
+                    setCommentContent(comment.content);
+                    setRating(comment.rating);
+                  }}
+                  className="text-blue-500 mt-2"
+                >
+                  Edit
+                </button>
+              )}
             </div>
           ))
         ) : (

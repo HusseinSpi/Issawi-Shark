@@ -13,8 +13,7 @@ export const getAllProjects = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await axios.get("projects");
-      // console.log(response.data);
-      return response.data.data;
+      return Array.isArray(response.data.data) ? response.data.data : [];
     } catch (error) {
       console.error("Error fetching projects:", error);
       return rejectWithValue(error.response.data);
@@ -41,6 +40,18 @@ export const getProject = createAsyncThunk(
     try {
       const response = await axios.get(`users/${props.projectId}`);
       return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
+export const updateProject = createAsyncThunk(
+  "project/updateProject",
+  async (projectId: string, { rejectWithValue }) => {
+    try {
+      const response = await axios.patch(`projects/${projectId}/rating`);
+      return response.data.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
     }

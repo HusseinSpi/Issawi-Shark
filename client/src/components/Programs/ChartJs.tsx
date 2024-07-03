@@ -1,4 +1,7 @@
-import { useState, ChangeEvent } from "react";
+import { useState, ChangeEvent, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { getAllProjects } from "../../redux/thunk/projectThunks";
+import { RootState } from "../../redux/store/store";
 import { Bar } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -25,72 +28,74 @@ interface DataItem {
   value: number;
 }
 
-interface DataSet {
-  [key: string]: DataItem[];
+interface Project {
+  _id: string;
+  title: string;
+  description: string;
+  categories: string[];
+  github: string;
+  rating: number;
+  technologies: string[];
+  status: string;
+  owner: {
+    _id: string;
+    userName: string;
+    email: string;
+    photo: string;
+    role: string;
+  };
+  teamMembers: string[];
+  date: string;
+  __v: number;
+  id: string;
 }
 
 const ChartJs: React.FC = () => {
-  const allData: DataSet = {
-    Hitech: [
-      { name: "Company A", value: 5 },
-      { name: "Company B", value: 1 },
-      { name: "Company C", value: 4.6 },
-      { name: "Company D", value: 8.1 },
-      { name: "Company E", value: 7.3 },
-      { name: "Company F", value: 4 },
-      { name: "Company G", value: 9 },
-      { name: "Company H", value: 2.4 },
-      { name: "Company I", value: 7.9 },
-      { name: "Company J", value: 9.2 },
-    ],
-    Banking: [
-      { name: "Bank A", value: 1 },
-      { name: "Bank B", value: 2 },
-      { name: "Bank C", value: 3 },
-      { name: "Bank D", value: 4 },
-      { name: "Bank E", value: 5 },
-      { name: "Bank F", value: 6 },
-      { name: "Bank G", value: 7 },
-      { name: "Bank H", value: 8 },
-      { name: "Bank I", value: 9 },
-      { name: "Bank J", value: 10 },
-    ],
-    Healthcare: [
-      { name: "Healthcare A", value: 3 },
-      { name: "Healthcare B", value: 5 },
-      { name: "Healthcare C", value: 2 },
-      { name: "Healthcare D", value: 7 },
-      { name: "Healthcare E", value: 8.5 },
-      { name: "Healthcare F", value: 6 },
-      { name: "Healthcare G", value: 4.2 },
-      { name: "Healthcare H", value: 9.1 },
-      { name: "Healthcare I", value: 5.5 },
-      { name: "Healthcare J", value: 6.7 },
-    ],
-    Educational: [
-      { name: "Education A", value: 2 },
-      { name: "Education B", value: 4.5 },
-      { name: "Education C", value: 7 },
-      { name: "Education D", value: 8 },
-      { name: "Education E", value: 3 },
-      { name: "Education F", value: 6 },
-      { name: "Education G", value: 9 },
-      { name: "Education H", value: 1 },
-      { name: "Education I", value: 4 },
-      { name: "Education J", value: 5 },
-    ],
+  const dispatch = useDispatch();
+  const {
+    data: projects = [],
+    status,
+    error,
+  } = useSelector((state: RootState) => state.project || {});
+
+  useEffect(() => {
+    dispatch(getAllProjects());
+  }, [dispatch]);
+
+  const categories = [
+    "Hitech",
+    "Banking",
+    "Healthcare",
+    "Educational",
+    "Retail",
+  ];
+
+  const getTopRatedProjects = (
+    category: string,
+    projects: Project[]
+  ): DataItem[] => {
+    return projects
+      .filter((project) => project.categories.includes(category))
+      .sort((a, b) => b.rating - a.rating)
+      .slice(0, 10)
+      .map((project) => ({ name: project.title, value: project.rating }));
   };
 
+  const allData = categories.reduce((acc, category) => {
+    acc[category] = getTopRatedProjects(category, projects);
+    return acc;
+  }, {} as { [key: string]: DataItem[] });
+
   const [selectedCategory, setSelectedCategory] =
-    useState<keyof DataSet>("Hitech");
+    useState<keyof typeof allData>("Hitech");
   const [chartData, setChartData] = useState<DataItem[]>(
-    allData[selectedCategory].slice(0, 10)
+    allData[selectedCategory] || []
   );
 
   const handleCategoryChange = (event: ChangeEvent<HTMLSelectElement>) => {
-    const category = event.target.value as keyof DataSet;
+    const category = event.target.value as keyof typeof allData;
     setSelectedCategory(category);
-    setChartData(allData[category].slice(0, 10));
+    setChartData(allData[category] || []);
   };
 
   const data = {
@@ -139,11 +144,11 @@ const ChartJs: React.FC = () => {
           onChange={handleCategoryChange}
           className="border rounded p-2 bg-white shadow-sm"
         >
-          <option value="Hitech">Hitech</option>
-          <option value="Banking">Banking</option>
-          <option value="Healthcare">Healthcare</option>
-          <option value="Educational">Educational</option>
-          <option value="Retail">Retail</option>
+          {categories.map((category) => (
+            <option key={category} value={category}>
+              {category}
+            </option>
+          ))}
         </select>
       </div>
       <div className="w-10/12 mx-auto pb-16">

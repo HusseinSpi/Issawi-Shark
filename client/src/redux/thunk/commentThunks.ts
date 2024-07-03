@@ -31,3 +31,22 @@ export const createComment = createAsyncThunk(
     }
   }
 );
+
+export const updateComment = createAsyncThunk(
+  "comments/updateComment",
+  async (commentData: { id: string; content: string; rating: number }) => {
+    const response = await axios.put(
+      `/comments/${commentData.id}`,
+      commentData
+    );
+    return response.data;
+  }
+);
+
+export const likeComment = createAsyncThunk(
+  "comments/likeComment",
+  async (commentId: string) => {
+    const response = await axios.put(`/comments/${commentId}/like`);
+    return response.data;
+  }
+);

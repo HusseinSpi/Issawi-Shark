@@ -53,9 +53,12 @@ const AccountForm: FC<AccountFormProps> = ({
 
     try {
       await dispatch(
-        updatePassword({ currentPassword, newPassword: password })
-      );
-      toast.success("Password updated successfully");
+        updatePassword({
+          currentPassword,
+          password,
+          newPassword: confirmPassword,
+        })
+      ).unwrap();
       setChangePassword(false);
       setCurrentPassword("");
       setPassword("");

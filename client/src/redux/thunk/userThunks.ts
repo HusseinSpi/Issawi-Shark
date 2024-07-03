@@ -14,6 +14,12 @@ interface ResetPasswordData {
   passwordConfirm: string;
 }
 
+interface UpdatePasswordArgs {
+  currentPassword: string;
+  password: string;
+  newPassword: string;
+}
+
 export const fetchUsersData = createAsyncThunk(
   "user/fetchUsersData",
   async () => {
@@ -156,17 +162,17 @@ export const resetPassword = createAsyncThunk(
 export const updatePassword = createAsyncThunk(
   "user/updatePassword",
   async (
-    passwords: { currentPassword: string; newPassword: string },
+    { currentPassword, password, newPassword }: UpdatePasswordArgs,
     { rejectWithValue }
   ) => {
     try {
-      const response = await axios.post("/api/user/updatePassword", {
-        passwordCurrent: passwords.currentPassword,
-        password: passwords.newPassword,
-        passwordConfirm: passwords.newPassword,
+      const response = await axios.patch("users/updateMyPassword", {
+        passwordCurrent: currentPassword,
+        password: password,
+        passwordConfirm: newPassword,
       });
       return response.data;
-    } catch (error) {
+    } catch (error: any) {
       return rejectWithValue(error.response.data);
     }
   }

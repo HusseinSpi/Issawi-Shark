@@ -3,6 +3,7 @@ import {
   getAllProjects,
   createProject,
   getProject,
+  updateProject,
 } from "../thunk/projectThunks";
 
 const projectSlice = createSlice({
@@ -44,6 +45,17 @@ const projectSlice = createSlice({
       .addCase(getProject.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.payload;
+      })
+      .addCase(updateProject.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(updateProject.fulfilled, (state, action) => {
+        state.loading = false;
+        state.data = action.payload;
+      })
+      .addCase(updateProject.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
       });
   },
 });

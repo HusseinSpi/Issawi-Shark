@@ -27,6 +27,7 @@ const Account: FC = () => {
     about: false,
     photo: false,
   });
+
   const [userDetails, setUserDetails] = useState({
     _id: "",
     firstName: "",
@@ -76,7 +77,13 @@ const Account: FC = () => {
           setEditMode={setEditMode}
           handleSave={handleSave}
         />
-        <AccountProfile userDetails={userDetails} />
+        <AccountProfile
+          userDetails={userDetails}
+          setUserDetails={setUserDetails}
+          editMode={editMode}
+          setEditMode={setEditMode}
+          handleSave={handleSave}
+        />
       </div>
     </div>
   );
