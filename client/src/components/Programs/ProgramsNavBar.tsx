@@ -2,6 +2,7 @@ import { FaRegBell, FaSearch } from "react-icons/fa";
 import { FC, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getCurrentUser } from "../../redux/thunk/navbarThunks";
+// import { }
 import { RootState } from "../../redux/store/store";
 import { useNavigate } from "react-router-dom";
 
@@ -48,7 +49,7 @@ const ProgramsNavBar: FC = () => {
       </div>
       <div
         className="flex items-center gap-5"
-        onClick={() => navigate(`/${person._id}`)}
+        onClick={() => navigate(`/profile/${person._id}`)}
       >
         <span className="text-gray-700">{person.email}</span>
         <img

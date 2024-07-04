@@ -68,6 +68,7 @@ exports.login = catchAsync(async (req, res, next) => {
 
 exports.protect = catchAsync(async (req, res, next) => {
   let token;
+
   if (
     req.headers.authorization &&
     req.headers.authorization.startsWith("Bearer")
@@ -81,26 +82,36 @@ exports.protect = catchAsync(async (req, res, next) => {
     );
   }
 
-  const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
+  try {
+    const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
 
-  const currentUser = await User.findById(decoded.id);
-  if (!currentUser) {
-    return next(
-      new AppError(
-        "The user belonging to this token does no longer exist.",
-        401
-      )
-    );
+    const currentUser = await User.findById(decoded.id);
+
+    if (!currentUser) {
+      return next(
+        new AppError(
+          "The user belonging to this token does no longer exist.",
+          401
+        )
+      );
+    }
+
+    if (currentUser.changedPasswordAfter(decoded.iat)) {
+      return next(
+        new AppError(
+          "User recently changed password! Please log in again.",
+          401
+        )
+      );
+    }
+
+    req.user = currentUser;
+    console.log("User attached to request:", req.user);
+    next();
+  } catch (err) {
+    console.log("Error in protect middleware:", err);
+    return next(new AppError("Authentication failed. Please try again.", 401));
   }
-
-  if (currentUser.changedPasswordAfter(decoded.iat)) {
-    return next(
-      new AppError("User recently changed password! Please log in again.", 401)
-    );
-  }
-
-  req.user = currentUser;
-  next();
 });
 
 exports.restrictTo = (...roles) => {
@@ -152,6 +163,7 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
     );
   }
 });
+
 exports.resetPassword = catchAsync(async (req, res, next) => {
   const hashedToken = crypto
     .createHash("sha256")
@@ -180,12 +192,16 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
 exports.updatePassword = catchAsync(async (req, res, next) => {
   const user = await User.findById(req.user.id).select("+password");
 
-  if (!(await user.correctPassword(req.body.passwordCurrent, user.password))) {
+  if (
+    !user ||
+    !(await user.correctPassword(req.body.passwordCurrent, user.password))
+  ) {
     return next(new AppError("Your current password is wrong", 401));
   }
 
   user.password = req.body.password;
   user.passwordConfirm = req.body.passwordConfirm;
+
   await user.save();
 
   createSendToken(user, 200, res);

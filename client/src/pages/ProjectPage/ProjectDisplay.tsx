@@ -1,5 +1,5 @@
 import React from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import Comments from "../../components/myProject/Comments";
@@ -15,14 +15,20 @@ interface ProjectData {
   status: string;
   technologies: string[];
   teamMembers: { userName: string }[];
-  owner: { photo: string; userName: string; email: string };
+  owner: { _id: string; photo: string; userName: string; email: string };
 }
 
 const ProjectDisplay: React.FC = () => {
+  const navigate = useNavigate();
   const { projectId } = useParams<{ projectId: string }>();
 
-  const projectData: ProjectData | undefined = useSelector((state: RootState) =>
-    state.project.data.find((project) => project.id === projectId)
+  const projectData: ProjectData | undefined = useSelector(
+    (state: RootState) => {
+      if (Array.isArray(state.project.data)) {
+        return state.project.data.find((project) => project.id === projectId);
+      }
+      return undefined;
+    }
   );
 
   if (!projectData) {
@@ -44,7 +50,7 @@ const ProjectDisplay: React.FC = () => {
 
   return (
     <>
-      <div className="bg-gradient-to-r from-purple-500 to-indigo-500 p-10 px-32 rounded-lg shadow-lg w-full max-w-6xl mx-auto text-white">
+      <div className="bg-gradient-to-t from-secondaryColor to-primaryColor p-10 px-32 rounded-lg shadow-lg w-full max-w-6xl mx-auto text-white">
         <h1 className="text-4xl font-bold mb-4 break-words">{title}</h1>
         <p className="text-gray-100 mb-6 break-words whitespace-pre-line">
           {description}
@@ -87,7 +93,10 @@ const ProjectDisplay: React.FC = () => {
           </p>
         </div>
 
-        <div className="flex items-center">
+        <div
+          className="flex items-center cursor-pointer"
+          onClick={() => navigate(`/profile/${owner._id}`)}
+        >
           <img
             src={owner.photo}
             alt="User"

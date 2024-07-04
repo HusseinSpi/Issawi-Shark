@@ -4,7 +4,6 @@ import { getAllProjects } from "../../redux/thunk/projectThunks";
 import { RootState } from "../../redux/store/store";
 import { Project } from "../../types/Project";
 import { useNavigate } from "react-router-dom";
-
 const ProjectDev: FC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -18,30 +17,24 @@ const ProjectDev: FC = () => {
     dispatch(getAllProjects());
   }, [dispatch]);
 
+  const reversedProjects = [...projects].reverse();
+
   return (
     <section className="pt-16 w-full px-4">
       {status === "loading" && <p>Loading...</p>}
       {status === "failed" && (
         <p>Error: {error?.message || "An error occurred"}</p>
       )}
-      {status === "succeeded" && projects.length > 0
-        ? projects.map((project: Project, index: number) => (
+      {status === "succeeded" && reversedProjects.length > 0
+        ? reversedProjects.map((project: Project, index: number) => (
             <div
               key={index}
-              className="bg-white border border-gray-300 w-full p-6 text-gray-800 rounded-lg shadow-md mb-6"
+              className="bg-thirdColor border border-gray-300 w-4/5 p-6 text-gray-800 rounded-lg shadow-md mb-11 transition-shadow duration-300 ease-in-out hover:shadow-2xl mx-auto"
               style={{ overflowWrap: "break-word", wordBreak: "break-word" }}
               onClick={() => navigate(`/project/${project._id}`)}
             >
               <h1 className="text-2xl font-bold mb-2">{project.title}</h1>
               <p className="mb-4">{project.description.substring(0, 300)}</p>
-              <a
-                href={project.github}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-blue-600 hover:underline mb-4 block"
-              >
-                View on GitHub
-              </a>
               <div className="mb-4">
                 <h2 className="text-lg font-semibold mb-1">Categories:</h2>
                 <ul className="list-disc list-inside">

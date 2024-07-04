@@ -9,7 +9,7 @@ interface ForgotPasswordPayload {
 }
 
 interface ResetPasswordData {
-  token: string;
+  resetToken: string;
   password: string;
   passwordConfirm: string;
 }
@@ -39,11 +39,23 @@ export const getCurrentUser = createAsyncThunk(
   async () => {
     try {
       const response = await axios.get("users/me");
-      // console.log(response.data);
       return response.data;
     } catch (error) {
       toast.error("Failed to get current user");
       throw error;
+    }
+  }
+);
+
+export const getUserById = createAsyncThunk(
+  "user/getUser",
+  async (userId: string, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(`users/profile/${userId}`);
+      return response.data;
+    } catch (error) {
+      toast.error("Failed to get user");
+      return rejectWithValue(error.response?.data || error.message);
     }
   }
 );
@@ -115,7 +127,7 @@ export const loginUser = createAsyncThunk(
 
 export const updateUser = createAsyncThunk(
   "user/updateUser",
-  async (userData, { rejectWithValue }) => {
+  async (userData: any, { rejectWithValue }) => {
     try {
       const response = await axios.patch("users/updateMe", userData);
       return response.data.data.user;
@@ -145,6 +157,7 @@ export const resetPassword = createAsyncThunk(
   "user/resetPassword",
   async ({ resetToken, password, passwordConfirm }: ResetPasswordData) => {
     const data = { password, passwordConfirm };
+    console.log(resetToken);
     try {
       const response = await axios.patch(
         `users/resetPassword/${resetToken}`,

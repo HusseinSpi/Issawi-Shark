@@ -21,8 +21,8 @@ router.route("/").get(userController.getAllUsers);
 router.route("/me").get(authController.protect, userController.getUser);
 
 router
-  .route("/:id")
-  .get(userController.getUser)
+  .route("/profile/:id")
+  .get(userController.getUserById)
   .delete(userController.deleteUser);
 
 module.exports = router;

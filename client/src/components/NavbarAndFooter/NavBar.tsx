@@ -16,7 +16,7 @@ const NavBar: FC = () => {
             to="/"
             className={({ isActive }) =>
               isActive
-                ? "font-bold bg-lightGray p-3 text-secondaryColor rounded-lg"
+                ? "font-bold bg-thirdColor p-3 text-secondaryColor rounded-lg"
                 : "hover:underline"
             }
           >
@@ -26,7 +26,7 @@ const NavBar: FC = () => {
             to="/general"
             className={({ isActive }) =>
               isActive
-                ? "font-bold bg-lightGray p-3 text-secondaryColor rounded-lg"
+                ? "font-bold bg-thirdColor p-3 text-secondaryColor rounded-lg"
                 : "hover:underline"
             }
           >
@@ -36,7 +36,7 @@ const NavBar: FC = () => {
             to="/services"
             className={({ isActive }) =>
               isActive
-                ? "font-bold bg-lightGray p-3 text-secondaryColor rounded-lg"
+                ? "font-bold bg-thirdColor p-3 text-secondaryColor rounded-lg"
                 : "hover:underline"
             }
           >
@@ -46,7 +46,7 @@ const NavBar: FC = () => {
             to="/news"
             className={({ isActive }) =>
               isActive
-                ? "font-bold bg-lightGray p-3 text-secondaryColor rounded-lg"
+                ? "font-bold bg-thirdColor p-3 text-secondaryColor rounded-lg"
                 : "hover:underline"
             }
           >
@@ -56,14 +56,14 @@ const NavBar: FC = () => {
             to="/about-us"
             className={({ isActive }) =>
               isActive
-                ? "font-bold bg-lightGray p-3 text-secondaryColor rounded-lg"
+                ? "font-bold bg-thirdColor p-3 text-secondaryColor rounded-lg"
                 : "hover:underline"
             }
           >
             About Us
           </NavLink>
           <button
-            className="hover:bg-lightGray bg-secondaryColor text-primaryColor py-2 px-4 rounded"
+            className="hover:bg-thirdColor bg-secondaryColor text-primaryColor py-2 px-4 rounded"
             onClick={() => navigate("/sign-up")}
           >
             Sign Up

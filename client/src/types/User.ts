@@ -10,3 +10,9 @@ export interface User {
   about: string;
   photo?: string;
 }
+
+export interface ResetPasswordData {
+  resetToken: string;
+  password: string;
+  passwordConfirm: string;
+}

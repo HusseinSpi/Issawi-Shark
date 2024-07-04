@@ -1,3 +1,4 @@
+// ResetPassword.tsx
 import React, { FC, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
@@ -5,14 +6,18 @@ import { AppDispatch } from "../../redux/store";
 import { resetPassword } from "../../redux/thunk/userThunks";
 import { IoEyeOutline, IoEyeOffOutline } from "react-icons/io5";
 
+interface ResetPasswordData {
+  resetToken: string;
+  password: string;
+  passwordConfirm: string;
+}
+
 const ResetPassword: FC = () => {
   const [password, setPassword] = useState<string>("");
   const [passwordConfirm, setPasswordConfirm] = useState<string>("");
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const dispatch: AppDispatch = useDispatch();
   const { resetToken } = useParams<{ resetToken: string }>();
-
-  console.log(resetToken);
 
   const handleShowPassword = () => {
     setShowPassword((prev) => !prev);
@@ -29,10 +34,15 @@ const ResetPassword: FC = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (password === passwordConfirm) {
-      dispatch(resetPassword({ resetToken, password, passwordConfirm }));
+    if (resetToken && password === passwordConfirm) {
+      const resetData: ResetPasswordData = {
+        resetToken,
+        password,
+        passwordConfirm,
+      };
+      dispatch(resetPassword(resetData));
     } else {
-      alert("Passwords do not match!");
+      alert("Passwords do not match or reset token is missing!");
     }
   };
 
@@ -101,7 +111,7 @@ const ResetPassword: FC = () => {
             type="submit"
             className="block w-full rounded-lg bg-blue-600 px-5 py-3 text-sm font-medium text-white"
           >
-            Send verification code
+            Reset Password
           </button>
         </form>
       </div>

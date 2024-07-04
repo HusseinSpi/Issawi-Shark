@@ -28,6 +28,7 @@
     "nodemailer": "^6.9.14",
     "react-icons": "^5.2.1",
     "react-toastify": "^10.0.5",
+    "socket.io": "^4.7.5",
     "validator": "^13.12.0",
     "xss-clean": "^0.1.4"
   },

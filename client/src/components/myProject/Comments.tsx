@@ -5,10 +5,11 @@ import {
   updateComment,
   likeComment,
 } from "../../redux/thunk/commentThunks";
+import { useNavigate } from "react-router-dom";
 import { updateProject } from "../../redux/thunk/projectThunks";
 import { RootState } from "../../redux/store/store";
 import { useEffect, FC, useState, FormEvent } from "react";
-import { CiStar } from "react-icons/ci";
+import { CiStar, CiPen } from "react-icons/ci";
 import { AiFillLike } from "react-icons/ai";
 
 interface CommentsProps {
@@ -16,9 +17,10 @@ interface CommentsProps {
 }
 
 const Comments: FC<CommentsProps> = ({ projectId }) => {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
-  const comment = useSelector((state: RootState) => state.comment);
-  const currentUser = useSelector((state: RootState) => state.navbar);
+  const commentState = useSelector((state: RootState) => state.comment);
+  const currentUserState = useSelector((state: RootState) => state.navbar);
   const [commentContent, setCommentContent] = useState<string>("");
   const [rating, setRating] = useState<number>(0);
   const [pushComment, setPushComment] = useState<boolean>(false);
@@ -34,12 +36,12 @@ const Comments: FC<CommentsProps> = ({ projectId }) => {
     }
   }, [dispatch, pushComment]);
 
-  const allComments = comment.data || [];
+  const allComments = commentState.data || [];
   const allCommentsForProject = allComments.filter(
     (comment) => comment.project === projectId
   );
 
-  const currentUserId = currentUser.data?.data?.user._id;
+  const currentUserId = currentUserState.data?.data?.user._id;
 
   const handleCommentSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -116,7 +118,10 @@ const Comments: FC<CommentsProps> = ({ projectId }) => {
               key={comment._id}
               className="comment bg-gray-100 p-6 rounded-lg mb-4 shadow-md"
             >
-              <div className="flex items-center mb-4">
+              <div
+                className="flex items-center mb-4 cursor-pointer"
+                onClick={() => navigate(`/profile/${comment.user._id}`)}
+              >
                 <img
                   src={comment.user.photo}
                   alt="User"
@@ -129,7 +134,20 @@ const Comments: FC<CommentsProps> = ({ projectId }) => {
                   <p className="text-gray-600">{comment.rating} ★</p>
                 </div>
               </div>
-              <p className="text-gray-800 font-bold">"{comment.content}"</p>
+              <div className="flex justify-between">
+                <p className="text-gray-800 font-bold">"{comment.content}"</p>
+                {comment.user._id === currentUserId && (
+                  <button
+                    onClick={() => {
+                      setCommentContent(comment.content);
+                      setRating(comment.rating);
+                    }}
+                    className="text-blue-500 mt-2"
+                  >
+                    <CiPen />
+                  </button>
+                )}
+              </div>
               <p className="text-gray-700">
                 <span className="text-gray-500 text-sm">
                   Published: {new Date(comment.createdAt).toLocaleDateString()}
@@ -146,17 +164,6 @@ const Comments: FC<CommentsProps> = ({ projectId }) => {
                 />
                 <span className="ml-2">{comment.likes?.length || 0}</span>
               </div>
-              {comment.user._id === currentUserId && (
-                <button
-                  onClick={() => {
-                    setCommentContent(comment.content);
-                    setRating(comment.rating);
-                  }}
-                  className="text-blue-500 mt-2"
-                >
-                  Edit
-                </button>
-              )}
             </div>
           ))
         ) : (

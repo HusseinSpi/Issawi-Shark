@@ -11,7 +11,7 @@ interface SidebarAndFooterProps {
 
 const Sidebar: FC<SidebarAndFooterProps> = ({ children }) => {
   return (
-    <div className="flex h-full">
+    <div className="flex h-screen">
       <div className="fixed top-0 left-0 h-full bg-secondaryColor w-64 flex flex-col justify-between">
         <div className="py-6">
           <span className="ml-5 grid h-10 w-32 place-content-center rounded-lg bg-gray-100 text-xs text-primaryColor">
@@ -21,7 +21,6 @@ const Sidebar: FC<SidebarAndFooterProps> = ({ children }) => {
               alt="logo"
             />
           </span>
-
           <ul className="mt-6 space-y-1">
             <li>
               <NavLink
@@ -29,7 +28,7 @@ const Sidebar: FC<SidebarAndFooterProps> = ({ children }) => {
                 className={({ isActive }) =>
                   `flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium ml-4 h-11 ${
                     isActive
-                      ? "bg-lightGray text-primaryColor mr-0 rounded-r-none"
+                      ? "bg-white text-primaryColor mr-0 rounded-r-none"
                       : "text-white"
                   }`
                 }
@@ -44,7 +43,7 @@ const Sidebar: FC<SidebarAndFooterProps> = ({ children }) => {
                 className={({ isActive }) =>
                   `flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium ml-4 h-11 ${
                     isActive
-                      ? "bg-lightGray text-primaryColor mr-0 rounded-r-none"
+                      ? "bg-white text-primaryColor mr-0 rounded-r-none"
                       : "text-white"
                   }`
                 }
@@ -59,7 +58,7 @@ const Sidebar: FC<SidebarAndFooterProps> = ({ children }) => {
                 className={({ isActive }) =>
                   `flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium ml-4 h-11 ${
                     isActive
-                      ? "bg-lightGray text-primaryColor mr-0 rounded-r-none"
+                      ? "bg-white text-primaryColor mr-0 rounded-r-none"
                       : "text-white"
                   }`
                 }
@@ -74,7 +73,7 @@ const Sidebar: FC<SidebarAndFooterProps> = ({ children }) => {
                 className={({ isActive }) =>
                   `flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium ml-4 h-11 ${
                     isActive
-                      ? "bg-lightGray text-primaryColor mr-0 rounded-r-none"
+                      ? "bg-white text-primaryColor mr-0 rounded-r-none"
                       : "text-white"
                   }`
                 }
@@ -89,7 +88,7 @@ const Sidebar: FC<SidebarAndFooterProps> = ({ children }) => {
                 className={({ isActive }) =>
                   `flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium ml-4 h-11 ${
                     isActive
-                      ? "bg-lightGray text-primaryColor mr-0 rounded-r-none"
+                      ? "bg-white text-primaryColor mr-0 rounded-r-none"
                       : "text-white"
                   }`
                 }
@@ -101,8 +100,7 @@ const Sidebar: FC<SidebarAndFooterProps> = ({ children }) => {
           </ul>
         </div>
       </div>
-
-      <div className="ml-64 flex-1 p-6 bg-lightGray">{children}</div>
+      <div className="ml-64 flex-1 p-6 bg-white">{children}</div>
     </div>
   );
 };

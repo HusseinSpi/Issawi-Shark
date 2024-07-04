@@ -1,11 +1,20 @@
 import { FC, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../redux/store/store";
-import { getCurrentUser, updateUser } from "../../redux/thunk/userThunks";
+import {
+  getCurrentUser,
+  updateUser,
+  getUserById,
+} from "../../redux/thunk/userThunks";
+import MyAccountForm from "../../components/account/MyAccountForm";
+import MyAccountProfile from "../../components/account/MyAccountProfile";
+import { useParams } from "react-router-dom";
 import AccountForm from "../../components/account/AccountForm";
 import AccountProfile from "../../components/account/AccountProfile";
 
 const Account: FC = () => {
+  const { userId } = useParams<{ userId: string }>();
+
   const dispatch: AppDispatch = useDispatch();
   const {
     data: userData,
@@ -42,10 +51,16 @@ const Account: FC = () => {
   });
 
   useEffect(() => {
-    if (userData?.data.user) {
-      setUserDetails(userData.data.user);
+    if (userId) {
+      dispatch(getUserById(userId)).then((response: any) => {
+        if (response.payload) {
+          setUserDetails(response.payload.data.user);
+        }
+      });
     }
-  }, [userData]);
+  }, [dispatch, userId]);
+
+  console.log(userDetails);
 
   if (status === "loading") {
     return <div>Loading...</div>;
@@ -70,20 +85,29 @@ const Account: FC = () => {
       </div>
 
       <div className="flex space-x-8">
-        <AccountForm
-          userDetails={userDetails}
-          setUserDetails={setUserDetails}
-          editMode={editMode}
-          setEditMode={setEditMode}
-          handleSave={handleSave}
-        />
-        <AccountProfile
-          userDetails={userDetails}
-          setUserDetails={setUserDetails}
-          editMode={editMode}
-          setEditMode={setEditMode}
-          handleSave={handleSave}
-        />
+        {userData.data.user._id === userDetails._id ? (
+          <>
+            <MyAccountForm
+              userDetails={userDetails}
+              setUserDetails={setUserDetails}
+              editMode={editMode}
+              setEditMode={setEditMode}
+              handleSave={handleSave}
+            />
+            <MyAccountProfile
+              userDetails={userDetails}
+              setUserDetails={setUserDetails}
+              editMode={editMode}
+              setEditMode={setEditMode}
+              handleSave={handleSave}
+            />
+          </>
+        ) : (
+          <>
+            <AccountForm userDetails={userDetails} />
+            <AccountProfile userDetails={userDetails} />
+          </>
+        )}
       </div>
     </div>
   );

@@ -152,7 +152,7 @@ const App: React.FC = () => {
       ),
     },
     {
-      path: "/:userId",
+      path: "/profile/:userId",
       element: (
         <PrivateRouteTwo>
           <Sidebar>

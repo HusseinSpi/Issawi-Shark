@@ -106,13 +106,13 @@ const ChartJs: React.FC = () => {
         data: chartData.map((company) => company.value),
         backgroundColor:
           selectedCategory === "Hitech"
-            ? "#ADD8E6"
+            ? "#1B1A55"
             : selectedCategory === "Banking"
-            ? "#FFD700"
+            ? "#E84545"
             : selectedCategory === "Healthcare"
-            ? "#FF6347"
+            ? "#903749"
             : selectedCategory === "Educational"
-            ? "#8A2BE2"
+            ? "#53354A"
             : "#3CB371",
       },
     ],

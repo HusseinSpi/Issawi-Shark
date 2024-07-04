@@ -8,6 +8,7 @@ import {
   forgotPassword,
   resetPassword,
   updatePassword,
+  getUserById,
 } from "../thunk/userThunks";
 
 const userSlice = createSlice({
@@ -86,6 +87,17 @@ const userSlice = createSlice({
       .addCase(updatePassword.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.payload;
+      })
+      .addCase(getUserById.pending, (state, action) => {
+        state.status = "loading";
+      })
+      .addCase(getUserById.fulfilled, (state, action) => {
+        state.data = action.payload;
+        state.status = "succeeded";
+      })
+      .addCase(getUserById.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
       });
   },
 });

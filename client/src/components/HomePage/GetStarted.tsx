@@ -14,7 +14,7 @@ const GetStarted: FC = () => {
           discounts by getting started.
         </p>
         <button
-          className="bg-lightGray text-secondaryColor py-2 px-4 rounded hover-bounce"
+          className="bg-thirdColor text-secondaryColor py-2 px-4 rounded hover-bounce"
           onClick={() => navigate("/sign-up")}
         >
           Get Started

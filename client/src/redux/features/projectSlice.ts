@@ -21,7 +21,7 @@ const projectSlice = createSlice({
       })
       .addCase(getAllProjects.fulfilled, (state, action) => {
         state.status = "succeeded";
-        state.data = action.payload;
+        state.data = Array.isArray(action.payload) ? action.payload : []; // Ensure it's an array
       })
       .addCase(getAllProjects.rejected, (state, action) => {
         state.status = "failed";
@@ -40,7 +40,9 @@ const projectSlice = createSlice({
       })
       .addCase(getProject.fulfilled, (state, action) => {
         state.status = "succeeded";
-        state.data = action.payload;
+        state.data = Array.isArray(action.payload)
+          ? action.payload
+          : state.data; // Ensure it's an array
       })
       .addCase(getProject.rejected, (state, action) => {
         state.status = "failed";
@@ -51,7 +53,9 @@ const projectSlice = createSlice({
       })
       .addCase(updateProject.fulfilled, (state, action) => {
         state.loading = false;
-        state.data = action.payload;
+        state.data = Array.isArray(action.payload)
+          ? action.payload
+          : state.data; // Ensure it's an array
       })
       .addCase(updateProject.rejected, (state, action) => {
         state.loading = false;

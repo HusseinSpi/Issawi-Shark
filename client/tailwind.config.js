@@ -4,10 +4,9 @@ export default {
   theme: {
     extend: {
       colors: {
-        primaryColor: "#222831",
-        thirdColor: "#393E46",
+        primaryColor: "#08D9D6",
         secondaryColor: "#00ADB5",
-        lightGray: "#EEEEEE",
+        thirdColor: "#EEEEEE",
       },
     },
   },

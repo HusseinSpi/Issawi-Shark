@@ -4,7 +4,7 @@ const OurValueProposition: FC = () => {
   return (
     <section className="bg-secondaryColor py-20 pr-20 pl-20">
       <div className="container mx-auto text-center">
-        <h3 className="text-3xl font-bold mb-10 slide-in-up text-lightGray">
+        <h3 className="text-3xl font-bold mb-10 slide-in-up text-thirdColor">
           Our Value to Help You
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">

@@ -18,17 +18,14 @@ const commentSchema = new mongoose.Schema(
     },
     rating: {
       type: Number,
-      min: 1,
+      min: 0,
       max: 5,
       required: true,
     },
     likes: {
-      type: Number,
-      default: 0,
-    },
-    dislikes: {
-      type: Number,
-      default: 0,
+      type: [mongoose.Schema.Types.ObjectId],
+      ref: "User",
+      default: [],
     },
     createdAt: {
       type: Date,

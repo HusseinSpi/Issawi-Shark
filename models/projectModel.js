@@ -41,7 +41,7 @@ const projectSchema = new mongoose.Schema(
     rating: {
       type: Number,
       min: [0, "Rating must be at least 0"],
-      max: [100, "Rating must be at most 100"],
+      max: [5, "Rating must be at most 5"],
       default: 0,
     },
     date: {

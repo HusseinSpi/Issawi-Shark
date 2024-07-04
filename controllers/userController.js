@@ -79,6 +79,19 @@ exports.getUser = catchAsync(async (req, res) => {
   });
 });
 
+exports.getUserById = catchAsync(async (req, res) => {
+  const user = await User.findById(req.params.id);
+  if (!user) {
+    return next(new AppError("User not found", 404));
+  }
+  res.status(200).json({
+    status: "success",
+    data: {
+      user,
+    },
+  });
+});
+
 exports.deleteUser = catchAsync(async (req, res) => {
   const user = await User.findByIdAndDelete(req.params.id);
 
