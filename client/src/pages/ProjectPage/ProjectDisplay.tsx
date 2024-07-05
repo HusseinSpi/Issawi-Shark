@@ -4,6 +4,13 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import Comments from "../../components/myProject/Comments";
 import ProgramsNavBar from "../../components/Programs/ProgramsNavBar";
+import {
+  FaGithubAlt,
+  FaFacebookF,
+  FaTwitter,
+  FaInstagram,
+  FaLinkedinIn,
+} from "react-icons/fa";
 
 interface ProjectData {
   id: string;
@@ -16,7 +23,17 @@ interface ProjectData {
   status: string;
   technologies: string[];
   teamMembers: { userName: string }[];
-  owner: { _id: string; photo: string; userName: string; email: string };
+  owner: {
+    _id: string;
+    photo: string;
+    userName: string;
+    email: string;
+    linkedin?: string;
+    github?: string;
+    facebook?: string;
+    twitter?: string;
+    instagram?: string;
+  };
   images: string[];
 }
 
@@ -78,11 +95,6 @@ const ProjectDisplay: React.FC = () => {
             View on GitHub
           </a>
 
-          <div className="flex items-center mb-6 break-words">
-            <span className="text-yellow-300 mr-4">{rating} ★</span>
-            <span className="text-primaryColor">{date}</span>
-          </div>
-
           <div className="mb-6 break-words">
             <h2 className="text-xl font-semibold mb-2">Project Details</h2>
             {technologies.length > 0 && (
@@ -101,13 +113,11 @@ const ProjectDisplay: React.FC = () => {
 
           <div className="mb-6">
             <h2 className="text-xl font-semibold mb-2">Project Images</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+            <div>
               {images.map((image, index) => (
                 <img
                   key={index}
-                  src={`${import.meta.env.VITE_BACKEND_URL}${
-                    image.startsWith("/") ? image.slice(1) : image
-                  }`}
+                  src={`http://localhost:8000${image}`}
                   alt={`Project Image ${index + 1}`}
                   className="w-full h-auto rounded-lg shadow-lg"
                 />
@@ -115,10 +125,74 @@ const ProjectDisplay: React.FC = () => {
             </div>
           </div>
 
+          <div className="flex items-center mb-6 break-words">
+            <span className="text-yellow-300 mr-4">{rating} ★</span>
+            <span className="text-primaryColor">{date}</span>
+          </div>
+
           <div className="mb-6">
             <h2 className="text-xl font-semibold mb-2">To communicate</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-              <p>d</p>
+            <div className="flex flex-col gap-2">
+              {owner.linkedin && (
+                <p className="flex items-center gap-2">
+                  Linkedin :{" "}
+                  <a
+                    href={owner.linkedin}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <FaLinkedinIn />
+                  </a>
+                </p>
+              )}
+              {owner.github && (
+                <p className="flex items-center gap-2">
+                  Github :{" "}
+                  <a
+                    href={owner.github}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <FaGithubAlt />
+                  </a>
+                </p>
+              )}
+              {owner.twitter && (
+                <p className="flex items-center gap-2">
+                  Twitter :{" "}
+                  <a
+                    href={owner.twitter}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <FaTwitter />
+                  </a>
+                </p>
+              )}
+              {owner.instagram && (
+                <p className="flex items-center gap-2">
+                  Instagram :{" "}
+                  <a
+                    href={owner.instagram}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <FaInstagram />
+                  </a>
+                </p>
+              )}
+              {owner.facebook && (
+                <p className="flex items-center gap-2">
+                  Facebook :{" "}
+                  <a
+                    href={owner.facebook}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <FaFacebookF />
+                  </a>
+                </p>
+              )}
             </div>
           </div>
 

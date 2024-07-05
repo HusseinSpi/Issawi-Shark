@@ -4,6 +4,7 @@ import {
   createProject,
   getProject,
   updateProject,
+  getPhoto,
 } from "../thunk/projectThunks";
 
 const initialState = {

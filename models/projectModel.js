@@ -86,7 +86,8 @@ const projectSchema = new mongoose.Schema(
 projectSchema.pre(/^find/, function (next) {
   this.populate({
     path: "owner",
-    select: "userName photo email role",
+    select:
+      "userName photo email role instagram linkedin twitter facebook github",
   }).populate({
     path: "teamMembers",
     select: "userName photo email role",

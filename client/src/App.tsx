@@ -18,7 +18,7 @@ import Message from "./pages/message/Message";
 import { SignUpPage } from "./pages/Signup/Signup";
 import { SignInPage } from "./pages/Login/Login";
 import ProjectDisplay from "./pages/ProjectPage/ProjectDisplay";
-import AddProject from "./components/myProject/AddProject";
+import AddProject from "./components/addProject/AddProject";
 import ForgotPasswordPage from "./pages/ForgotPasword/ForgotPassword";
 import ResetPassword from "./pages/ForgotPasword/ResetPassword";
 

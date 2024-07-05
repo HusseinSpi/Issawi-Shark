@@ -16,11 +16,12 @@ const commentRoutes = require("./routes/commentRoutes");
 const app = express();
 
 const corsOptions = {
-  origin: "http://localhost:5173",
+  origin: ["http://localhost:5173", "http://localhost:8000"],
   credentials: true,
 };
 
 app.use(cors(corsOptions));
+
 app.use(helmet());
 app.use(cookieParser());
 
@@ -33,6 +34,7 @@ app.use(mongoSanitize());
 app.use(xss());
 
 app.use((req, res, next) => {
+  res.setHeader("Cross-Origin-Resource-Policy", "cross-origin");
   req.requestTime = new Date().toISOString();
   next();
 });
