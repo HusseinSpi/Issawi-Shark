@@ -62,29 +62,40 @@ export const getUserById = createAsyncThunk(
 
 export const signUpUser = createAsyncThunk(
   "user/signUpUser",
-  async ({
-    userName,
-    firstName,
-    lastName,
-    email,
-    password,
-    passwordConfirm,
-    photo,
-    age,
-    github,
-    about,
-  }: {
-    userName: string;
-    firstName: string;
-    lastName: string;
-    email: string;
-    password: string;
-    passwordConfirm: string;
-    photo: string;
-    age: number;
-    github: string;
-    about: string;
-  }) => {
+  async (
+    {
+      userName,
+      firstName,
+      lastName,
+      email,
+      password,
+      passwordConfirm,
+      photo,
+      age,
+      github,
+      about,
+      facebook,
+      twitter,
+      linkedin,
+      instagram,
+    }: {
+      userName: string;
+      firstName: string;
+      lastName: string;
+      email: string;
+      password: string;
+      passwordConfirm: string;
+      photo: string;
+      age: number;
+      github: string;
+      about: string;
+      facebook?: string;
+      twitter?: string;
+      linkedin?: string;
+      instagram?: string;
+    },
+    { rejectWithValue }
+  ) => {
     const data = {
       firstName,
       lastName,
@@ -96,15 +107,19 @@ export const signUpUser = createAsyncThunk(
       age,
       github,
       about,
+      facebook,
+      twitter,
+      linkedin,
+      instagram,
     };
     try {
       const response = await axios.post("users/signup", data);
       toast.success("Signup successful!");
-      window.location.reload();
       return response.data;
-    } catch (error) {
+    } catch (error: any) {
       toast.error("Signup failed");
-      throw error;
+      console.error("Signup error:", error.response?.data || error.message);
+      return rejectWithValue(error.response?.data || error.message);
     }
   }
 );

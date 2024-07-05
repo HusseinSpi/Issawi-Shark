@@ -1,6 +1,6 @@
 const Project = require("../models/projectModel");
-const AppError = require("./../utils/appError");
-const catchAsync = require("./../utils/catchAsync");
+const AppError = require("../utils/appError");
+const catchAsync = require("../utils/catchAsync");
 const Comment = require("../models/commentModel");
 
 exports.getAllProjects = catchAsync(async (req, res, next) => {
@@ -13,7 +13,34 @@ exports.getAllProjects = catchAsync(async (req, res, next) => {
 });
 
 exports.createProject = catchAsync(async (req, res, next) => {
-  const newProject = await Project.create(req.body);
+  const {
+    title,
+    description,
+    categories,
+    github,
+    technologies,
+    status,
+    owner,
+    teamMembers,
+    contactInfo,
+  } = req.body;
+
+  const files = req.files;
+  const imageUrls = files.map((file) => `/uploads/${file.filename}`);
+
+  const newProject = await Project.create({
+    title,
+    description,
+    categories,
+    github,
+    technologies,
+    status,
+    owner,
+    teamMembers,
+    contactInfo,
+    images: imageUrls,
+  });
+
   res.status(201).json({
     status: "success",
     data: newProject,

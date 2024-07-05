@@ -7,8 +7,10 @@ const General: FC = () => {
   return (
     <>
       <ProgramsNavBar />
-      <ChartJs />
-      <ProjectDev />
+      <div className="container mx-auto p-4">
+        <ChartJs />
+        <ProjectDev />
+      </div>
     </>
   );
 };

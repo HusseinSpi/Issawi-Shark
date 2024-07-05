@@ -67,6 +67,15 @@ const projectSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
+    contactInfo: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    images: {
+      type: [String],
+      required: true,
+    },
   },
   {
     toJSON: { virtuals: true },

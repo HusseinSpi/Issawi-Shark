@@ -1,8 +1,7 @@
 import { FaRegBell, FaSearch } from "react-icons/fa";
-import { FC, useEffect } from "react";
+import { FC, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getCurrentUser } from "../../redux/thunk/navbarThunks";
-// import { }
 import { RootState } from "../../redux/store/store";
 import { useNavigate } from "react-router-dom";
 
@@ -11,7 +10,7 @@ interface User {
   userName: string;
   email: string;
   role: string;
-  photo?: string;
+  photo: string;
 }
 
 const ProgramsNavBar: FC = () => {
@@ -23,20 +22,22 @@ const ProgramsNavBar: FC = () => {
     error,
   } = useSelector((state: RootState) => state.navbar);
 
+  const [searchTerm, setSearchTerm] = useState("");
+
   useEffect(() => {
     dispatch(getCurrentUser());
   }, [dispatch]);
 
-  // console.log(userData);
   const person: User = userData?.data.user || {
     _id: "",
     userName: "",
     email: "",
     role: "",
+    photo: "",
   };
 
   return (
-    <div className="flex justify-between items-center p-4 bg-gray-100 shadow-md">
+    <div className="flex justify-between items-center p-4 bg-thirdColor shadow-md">
       <div className="flex items-center">
         <div className="flex items-center border rounded-xl px-2 py-1 w-96 h-11 bg-white shadow-sm">
           <FaSearch className="text-gray-500 mr-2" />
@@ -44,11 +45,13 @@ const ProgramsNavBar: FC = () => {
             type="text"
             placeholder="Search"
             className="w-full h-full outline-none text-gray-700"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
       </div>
       <div
-        className="flex items-center gap-5"
+        className="flex items-center gap-5 cursor-pointer"
         onClick={() => navigate(`/profile/${person._id}`)}
       >
         <span className="text-gray-700">{person.email}</span>
@@ -60,7 +63,6 @@ const ProgramsNavBar: FC = () => {
           alt="Profile"
           className="w-10 h-10 rounded-full object-cover"
         />
-        <FaRegBell className="text-xl text-gray-700" />
       </div>
     </div>
   );

@@ -46,7 +46,12 @@ exports.signup = catchAsync(async (req, res, next) => {
     age: req.body.age,
     github: req.body.github,
     about: req.body.about,
+    facebook: req.body.facebook || "",
+    twitter: req.body.twitter || "",
+    linkedin: req.body.linkedin || "",
+    instagram: req.body.instagram || "",
   });
+
   createSendToken(newUser, 201, res);
 });
 

@@ -18,6 +18,10 @@ interface FormData {
   github: string;
   about: string;
   role: string;
+  facebook?: string;
+  twitter?: string;
+  linkedin?: string;
+  instagram?: string;
 }
 
 const SignUpForm: React.FC = () => {
@@ -33,6 +37,10 @@ const SignUpForm: React.FC = () => {
     github: "",
     about: "",
     role: "user",
+    facebook: "",
+    twitter: "",
+    linkedin: "",
+    instagram: "",
   });
 
   const [showPassword, setShowPassword] = useState<boolean>(false);
@@ -49,12 +57,11 @@ const SignUpForm: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // console.log("Form Data:", formData);
-
     dispatch(signUpUser(formData))
       .unwrap()
       .then((response) => {
         toast.success("Signup successful!");
+        window.location.reload();
       })
       .catch((error) => {
         toast.error("Failed to sign up");
@@ -231,7 +238,6 @@ const SignUpForm: React.FC = () => {
           required
         />
       </div>
-
       <div>
         <label htmlFor="github" className="sr-only">
           GitHub Profile
@@ -246,6 +252,68 @@ const SignUpForm: React.FC = () => {
           placeholder="Enter GitHub profile URL"
           required
         />
+      </div>
+      <div className="flex space-x-4">
+        <div>
+          <label htmlFor="linkedin" className="sr-only">
+            LinkedIn Profile
+          </label>
+          <input
+            type="url"
+            id="linkedin"
+            name="linkedin"
+            value={formData.linkedin}
+            onChange={handleChange}
+            className="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm"
+            placeholder="Enter LinkedIn profile URL (optional)"
+          />
+        </div>
+
+        <div>
+          <label htmlFor="twitter" className="sr-only">
+            Twitter Profile
+          </label>
+          <input
+            type="url"
+            id="twitter"
+            name="twitter"
+            value={formData.twitter}
+            onChange={handleChange}
+            className="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm"
+            placeholder="Enter Twitter profile URL (optional)"
+          />
+        </div>
+      </div>
+
+      <div className="flex space-x-4">
+        <div>
+          <label htmlFor="facebook" className="sr-only">
+            Facebook Profile
+          </label>
+          <input
+            type="url"
+            id="facebook"
+            name="facebook"
+            value={formData.facebook}
+            onChange={handleChange}
+            className="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm"
+            placeholder="Enter Facebook profile URL (optional)"
+          />
+        </div>
+        <div>
+          <label htmlFor="instagram" className="sr-only">
+            Instagram Profile
+          </label>
+          <input
+            type="url"
+            id="instagram"
+            name="instagram"
+            value={formData.instagram}
+            onChange={handleChange}
+            className="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm"
+            placeholder="Enter Instagram profile URL (optional)"
+          />
+        </div>
       </div>
 
       <div>

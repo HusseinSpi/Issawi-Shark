@@ -31,12 +31,18 @@ exports.updateMe = catchAsync(async (req, res, next) => {
     "age",
     "github",
     "photo",
-    "about"
+    "about",
+    "socialMedia.facebook",
+    "socialMedia.twitter",
+    "socialMedia.linkedin",
+    "socialMedia.instagram"
   );
+
   const updateUser = await User.findByIdAndUpdate(req.user.id, filteredBody, {
     new: true,
     runValidators: true,
   });
+
   res.status(200).json({
     status: "success",
     data: {

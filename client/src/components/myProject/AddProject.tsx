@@ -46,6 +46,8 @@ const AddProject: React.FC = () => {
   const [github, setGithub] = useState<string>("");
   const [technologies, setTechnologies] = useState<string>("");
   const [projectStatus, setProjectStatus] = useState<string>("pending");
+  const [images, setImages] = useState<File[]>([]);
+  const [contactInfo, setContactInfo] = useState<string>("");
 
   const allUsers: User[] = usersData?.data?.users || [];
 
@@ -80,19 +82,31 @@ const AddProject: React.FC = () => {
     );
   };
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      setImages(Array.from(e.target.files));
+    }
+  };
+
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    const newProject = {
-      title: projectTitle,
-      description,
-      categories,
-      github,
-      technologies: technologies.split(",").map((tech) => tech.trim()),
-      status: projectStatus,
-      owner: currentUser._id,
-      teamMembers: selectedUsers.map((user) => user._id),
-    };
-    dispatch(createProject(newProject));
+
+    const formData = new FormData();
+    formData.append("title", projectTitle);
+    formData.append("description", description);
+    categories.forEach((category) => formData.append("categories", category));
+    formData.append("github", github);
+    technologies
+      .split(",")
+      .map((tech) => tech.trim())
+      .forEach((tech) => formData.append("technologies", tech));
+    formData.append("status", projectStatus);
+    formData.append("owner", currentUser._id);
+    selectedUsers.forEach((user) => formData.append("teamMembers", user._id));
+    formData.append("contactInfo", contactInfo);
+    images.forEach((image) => formData.append("images", image));
+
+    dispatch(createProject(formData));
   };
 
   return (
@@ -101,6 +115,7 @@ const AddProject: React.FC = () => {
       <form
         className="max-w-lg mx-auto bg-white p-8 rounded-lg shadow-lg"
         onSubmit={handleSubmit}
+        encType="multipart/form-data"
       >
         <div className="mb-4">
           <label
@@ -279,6 +294,41 @@ const AddProject: React.FC = () => {
             </ul>
           </div>
         )}
+
+        <div className="mb-4">
+          <label
+            htmlFor="images"
+            className="block text-sm font-medium text-gray-700"
+          >
+            Upload Images
+          </label>
+          <input
+            type="file"
+            id="images"
+            name="images"
+            className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+            multiple
+            onChange={handleImageChange}
+          />
+        </div>
+
+        <div className="mb-4">
+          <label
+            htmlFor="contactInfo"
+            className="block text-sm font-medium text-gray-700"
+          >
+            Contact Information or Address
+          </label>
+          <input
+            type="text"
+            id="contactInfo"
+            name="contactInfo"
+            className="h-10 p-3 mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+            value={contactInfo}
+            onChange={(e) => setContactInfo(e.target.value)}
+            required
+          />
+        </div>
 
         <button
           type="submit"

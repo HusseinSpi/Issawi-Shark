@@ -73,6 +73,27 @@ const userSchema = new mongoose.Schema({
     trim: true,
     required: true,
   },
+  facebook: {
+    type: String,
+    match: /https?:\/\/(www\.)?facebook\.com\/\S+/,
+    trim: true,
+  },
+  twitter: {
+    type: String,
+    match: /https?:\/\/(www\.)?x\.com\/\S+/,
+    trim: true,
+  },
+  linkedin: {
+    type: String,
+    match: /https?:\/\/(www\.)?linkedin\.com\/in\/\S+/,
+    trim: true,
+  },
+  instagram: {
+    type: String,
+    match: /https?:\/\/(www\.)?instagram\.com\/\S+/,
+    trim: true,
+  },
+
   passwordResetToken: String,
   passwordResetExpires: Date,
 });

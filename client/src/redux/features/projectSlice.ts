@@ -6,13 +6,15 @@ import {
   updateProject,
 } from "../thunk/projectThunks";
 
+const initialState = {
+  data: [],
+  status: "idle",
+  error: null,
+};
+
 const projectSlice = createSlice({
   name: "project",
-  initialState: {
-    data: [],
-    status: "idle",
-    error: null,
-  },
+  initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder
@@ -21,7 +23,7 @@ const projectSlice = createSlice({
       })
       .addCase(getAllProjects.fulfilled, (state, action) => {
         state.status = "succeeded";
-        state.data = Array.isArray(action.payload) ? action.payload : []; // Ensure it's an array
+        state.data = Array.isArray(action.payload) ? action.payload : [];
       })
       .addCase(getAllProjects.rejected, (state, action) => {
         state.status = "failed";
@@ -35,30 +37,30 @@ const projectSlice = createSlice({
         state.status = "failed";
         state.error = action.payload;
       })
-      .addCase(getProject.pending, (state, action) => {
+      .addCase(getProject.pending, (state) => {
         state.status = "loading";
       })
       .addCase(getProject.fulfilled, (state, action) => {
         state.status = "succeeded";
         state.data = Array.isArray(action.payload)
           ? action.payload
-          : state.data; // Ensure it's an array
+          : state.data;
       })
       .addCase(getProject.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.payload;
       })
       .addCase(updateProject.pending, (state) => {
-        state.loading = true;
+        state.status = "loading";
       })
       .addCase(updateProject.fulfilled, (state, action) => {
-        state.loading = false;
-        state.data = Array.isArray(action.payload)
-          ? action.payload
-          : state.data; // Ensure it's an array
+        state.status = "succeeded";
+        state.data = state.data.map((project) =>
+          project.id === action.payload.id ? action.payload : project
+        );
       })
       .addCase(updateProject.rejected, (state, action) => {
-        state.loading = false;
+        state.status = "failed";
         state.error = action.payload as string;
       });
   },

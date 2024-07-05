@@ -9,7 +9,7 @@ interface ProjectProps {
 }
 
 export const getAllProjects = createAsyncThunk(
-  "project/fetchProject",
+  "project/fetchProjects",
   async (_, { rejectWithValue }) => {
     try {
       const response = await axios.get("projects");
@@ -23,24 +23,30 @@ export const getAllProjects = createAsyncThunk(
 
 export const createProject = createAsyncThunk(
   "project/createProject",
-  async (projectData, { rejectWithValue }) => {
+  async (projectData: FormData, { rejectWithValue }) => {
     try {
-      const response = await axios.post("projects", projectData);
+      const response = await axios.post("projects", projectData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
       toast.success("Project created successfully");
       return response.data.data;
     } catch (error) {
+      console.error("Error creating project:", error);
       return rejectWithValue(error.response.data);
     }
   }
 );
 
 export const getProject = createAsyncThunk(
-  "project/getUser",
+  "project/getProject",
   async (props: ProjectProps, { rejectWithValue }) => {
     try {
-      const response = await axios.get(`users/${props.projectId}`);
+      const response = await axios.get(`projects/${props.projectId}`);
       return response.data;
     } catch (error) {
+      console.error("Error fetching project:", error);
       return rejectWithValue(error.response.data);
     }
   }
@@ -48,11 +54,15 @@ export const getProject = createAsyncThunk(
 
 export const updateProject = createAsyncThunk(
   "project/updateProject",
-  async (projectId: string, { rejectWithValue }) => {
+  async (
+    { projectId, updateData }: { projectId: string; updateData: any },
+    { rejectWithValue }
+  ) => {
     try {
-      const response = await axios.patch(`projects/${projectId}/rating`);
+      const response = await axios.patch(`projects/${projectId}`, updateData);
       return response.data.data;
     } catch (error) {
+      console.error("Error updating project:", error);
       return rejectWithValue(error.response.data);
     }
   }

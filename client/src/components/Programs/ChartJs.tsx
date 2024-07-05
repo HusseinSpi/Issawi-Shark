@@ -106,7 +106,7 @@ const ChartJs: React.FC = () => {
         data: chartData.map((company) => company.value),
         backgroundColor:
           selectedCategory === "Hitech"
-            ? "#1B1A55"
+            ? "#DC5F00"
             : selectedCategory === "Banking"
             ? "#E84545"
             : selectedCategory === "Healthcare"
@@ -137,7 +137,7 @@ const ChartJs: React.FC = () => {
   };
 
   return (
-    <section className="mt-5">
+    <section className="mt-5 mb-0">
       <div className="flex justify-start mb-4">
         <select
           value={selectedCategory}
