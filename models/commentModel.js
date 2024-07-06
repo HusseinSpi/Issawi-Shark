@@ -42,6 +42,9 @@ commentSchema.pre(/^find/, function (next) {
   this.populate({
     path: "user",
     select: "email userName photo",
+  }).populate({
+    path: "project",
+    select: "_id title description",
   });
   next();
 });

@@ -211,7 +211,7 @@ const ProjectDisplay: React.FC = () => {
             </div>
           </div>
         </div>
-        <Comments projectId={projectData.id} />
+        {projectData.id && <Comments projectId={projectData.id} />}
       </div>
     </>
   );

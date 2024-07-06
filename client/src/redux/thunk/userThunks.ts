@@ -1,6 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "../../axiosConfig";
 import { toast } from "react-toastify";
+import { createRecentActivity } from "./recentActivityThunks";
 
 axios.defaults.withCredentials = true;
 
@@ -22,36 +23,42 @@ interface UpdatePasswordArgs {
 
 export const fetchUsersData = createAsyncThunk(
   "user/fetchUsersData",
-  async () => {
+  async (_, { dispatch, rejectWithValue }) => {
     try {
       const response = await axios.get("users");
       const users = response.data;
       return users;
     } catch (error) {
       toast.error("Failed to fetch users data");
-      throw error;
+      return rejectWithValue(error.response?.data || error.message);
     }
   }
 );
 
 export const getCurrentUser = createAsyncThunk(
   "user/getCurrentUser",
-  async () => {
+  async (_, { dispatch, rejectWithValue }) => {
     try {
       const response = await axios.get("users/me");
       return response.data;
     } catch (error) {
       toast.error("Failed to get current user");
-      throw error;
+      return rejectWithValue(error.response?.data || error.message);
     }
   }
 );
 
 export const getUserById = createAsyncThunk(
   "user/getUser",
-  async (userId: string, { rejectWithValue }) => {
+  async (userId: string, { dispatch, rejectWithValue }) => {
     try {
       const response = await axios.get(`users/profile/${userId}`);
+      dispatch(
+        createRecentActivity({
+          type: "user",
+          description: `Fetched user: ${userId}`,
+        })
+      );
       return response.data;
     } catch (error) {
       toast.error("Failed to get user");
@@ -94,7 +101,7 @@ export const signUpUser = createAsyncThunk(
       linkedin?: string;
       instagram?: string;
     },
-    { rejectWithValue }
+    { dispatch, rejectWithValue }
   ) => {
     const data = {
       firstName,
@@ -115,6 +122,12 @@ export const signUpUser = createAsyncThunk(
     try {
       const response = await axios.post("users/signup", data);
       toast.success("Signup successful!");
+      dispatch(
+        createRecentActivity({
+          type: "user",
+          description: `User signed up: ${userName}`,
+        })
+      );
       return response.data;
     } catch (error: any) {
       toast.error("Signup failed");
@@ -126,63 +139,91 @@ export const signUpUser = createAsyncThunk(
 
 export const loginUser = createAsyncThunk(
   "user/loginUser",
-  async ({ email, password }: { email: string; password: string }) => {
+  async (
+    { email, password }: { email: string; password: string },
+    { dispatch, rejectWithValue }
+  ) => {
     const data = { email, password };
     try {
       const response = await axios.post("users/login", data);
       toast.success("Login successful!");
+      dispatch(
+        createRecentActivity({
+          type: "user",
+          description: `User logged in: ${email}`,
+        })
+      );
       window.location.reload();
       return response.data;
     } catch (error) {
       toast.error("Login failed");
-      throw error;
+      return rejectWithValue(error.response?.data || error.message);
     }
   }
 );
 
 export const updateUser = createAsyncThunk(
   "user/updateUser",
-  async (userData: any, { rejectWithValue }) => {
+  async (userData: any, { dispatch, rejectWithValue }) => {
     try {
       const response = await axios.patch("users/updateMe", userData);
+      dispatch(
+        createRecentActivity({
+          type: "user",
+          description: `User updated: ${userData.username}`,
+        })
+      );
       return response.data.data.user;
     } catch (error) {
-      return rejectWithValue(error.response.data.message);
+      return rejectWithValue(error.response?.data || error.message);
     }
   }
 );
 
 export const forgotPassword = createAsyncThunk(
   "user/forgotPassword",
-  async ({ email }: ForgotPasswordPayload) => {
+  async ({ email }: ForgotPasswordPayload, { dispatch, rejectWithValue }) => {
     const data = { email };
-    console.log(data);
     try {
       const response = await axios.post("users/forgotPassword", data);
       toast.success("Password reset email sent");
+      dispatch(
+        createRecentActivity({
+          type: "user",
+          description: `Password reset email sent to: ${email}`,
+        })
+      );
       return response.data;
     } catch (error) {
       toast.error("Failed to send password reset email");
-      throw error;
+      return rejectWithValue(error.response?.data || error.message);
     }
   }
 );
 
 export const resetPassword = createAsyncThunk(
   "user/resetPassword",
-  async ({ resetToken, password, passwordConfirm }: ResetPasswordData) => {
+  async (
+    { resetToken, password, passwordConfirm }: ResetPasswordData,
+    { dispatch, rejectWithValue }
+  ) => {
     const data = { password, passwordConfirm };
-    console.log(resetToken);
     try {
       const response = await axios.patch(
         `users/resetPassword/${resetToken}`,
         data
       );
       toast.success("Password reset successful");
+      dispatch(
+        createRecentActivity({
+          type: "user",
+          description: `Password reset with token: ${resetToken}`,
+        })
+      );
       return response.data;
     } catch (error) {
       toast.error("Failed to reset password");
-      throw error;
+      return rejectWithValue(error.response?.data || error.message);
     }
   }
 );
@@ -191,7 +232,7 @@ export const updatePassword = createAsyncThunk(
   "user/updatePassword",
   async (
     { currentPassword, password, newPassword }: UpdatePasswordArgs,
-    { rejectWithValue }
+    { dispatch, rejectWithValue }
   ) => {
     try {
       const response = await axios.patch("users/updateMyPassword", {
@@ -199,9 +240,15 @@ export const updatePassword = createAsyncThunk(
         password: password,
         passwordConfirm: newPassword,
       });
+      dispatch(
+        createRecentActivity({
+          type: "user",
+          description: `User password updated`,
+        })
+      );
       return response.data;
     } catch (error: any) {
-      return rejectWithValue(error.response.data);
+      return rejectWithValue(error.response?.data || error.message);
     }
   }
 );

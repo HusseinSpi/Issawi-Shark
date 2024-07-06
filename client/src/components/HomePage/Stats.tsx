@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchUsersData } from "../../redux/thunk/userThunks";
 import { getAllProjects } from "../../redux/thunk/projectThunks";
 import { getAllComments } from "../../redux/thunk/commentThunks";
-import { RootState } from "../../redux/store";
+import { RootState } from "../../redux/store/store";
 
 interface Stat {
   id: number;

@@ -12,6 +12,7 @@ const globalErrorHandler = require("./controllers/errorController");
 const userRoutes = require("./routes/userRoutes");
 const projectRoutes = require("./routes/projectRoutes");
 const commentRoutes = require("./routes/commentRoutes");
+const recentActivityRoutes = require("./routes/recentActivityRoutes"); // تأكد من أن المسار صحيح
 
 const app = express();
 
@@ -21,7 +22,6 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-
 app.use(helmet());
 app.use(cookieParser());
 
@@ -44,6 +44,7 @@ app.use("/uploads", express.static("uploads"));
 app.use("/api/v1/users", userRoutes);
 app.use("/api/v1/projects", projectRoutes);
 app.use("/api/v1/comments", commentRoutes);
+app.use("/api/v1/recent-activities", recentActivityRoutes);
 
 app.all("*", (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));

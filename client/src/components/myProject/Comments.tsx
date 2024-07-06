@@ -38,7 +38,7 @@ const Comments: FC<CommentsProps> = ({ projectId }) => {
 
   const allComments = commentState.data || [];
   const allCommentsForProject = allComments.filter(
-    (comment) => comment.project === projectId
+    (comment) => comment.project._id === projectId
   );
 
   const currentUserId = currentUserState.data?.data?.user._id;

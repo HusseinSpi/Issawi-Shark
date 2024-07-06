@@ -66,3 +66,14 @@ exports.getAllCommentsForProject = catchAsync(async (projectId) => {
   console.log(comments);
   return comments;
 });
+
+exports.deleteComment = catchAsync(async (req, res, next) => {
+  const comment = await Comment.findByIdAndDelete(req.params.id);
+  if (!comment) {
+    return next(new AppError("No comment found with that ID", 404));
+  }
+  res.status(204).json({
+    status: "success",
+    data: null,
+  });
+});

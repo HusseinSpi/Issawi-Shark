@@ -33,26 +33,6 @@ const NavBar: FC = () => {
           >
             Programs
           </NavLink>
-          <NavLink
-            to="/services"
-            className={({ isActive }) =>
-              isActive
-                ? "font-bold bg-thirdColor p-3 text-primaryColor rounded-lg"
-                : "hover:underline"
-            }
-          >
-            Services
-          </NavLink>
-          <NavLink
-            to="/about-us"
-            className={({ isActive }) =>
-              isActive
-                ? "font-bold bg-thirdColor p-3 text-primaryColor rounded-lg"
-                : "hover:underline"
-            }
-          >
-            About Us
-          </NavLink>
           <button
             className="hover:bg-thirdColor bg-secondaryColor text-primaryColor py-2 px-4 rounded"
             onClick={() => navigate("/sign-up")}

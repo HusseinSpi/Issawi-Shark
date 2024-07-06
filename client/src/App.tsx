@@ -20,7 +20,7 @@ import ProjectDisplay from "./pages/ProjectPage/ProjectDisplay";
 import AddProject from "./components/addProject/AddProject";
 import ForgotPasswordPage from "./pages/ForgotPasword/ForgotPassword";
 import ResetPassword from "./pages/ForgotPasword/ResetPassword";
-import AboutUs from "./pages/AboutUs/AboutUs";
+import AdminPage from "./pages/admin/AdminPage";
 
 const App: React.FC = () => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
@@ -147,6 +147,16 @@ const App: React.FC = () => {
         <PrivateRouteTwo>
           <Sidebar>
             <Account />
+          </Sidebar>
+        </PrivateRouteTwo>
+      ),
+    },
+    {
+      path: "admin",
+      element: (
+        <PrivateRouteTwo>
+          <Sidebar>
+            <AdminPage />
           </Sidebar>
         </PrivateRouteTwo>
       ),

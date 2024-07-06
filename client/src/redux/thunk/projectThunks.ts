@@ -1,6 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "../../axiosConfig";
 import { toast } from "react-toastify";
+import { createRecentActivity } from "./recentActivityThunks";
 
 axios.defaults.withCredentials = true;
 
@@ -8,29 +9,57 @@ interface ProjectProps {
   projectId: string;
 }
 
-export const getAllProjects = createAsyncThunk(
-  "project/fetchProjects",
-  async (_, { rejectWithValue }) => {
-    try {
-      const response = await axios.get("projects");
-      return Array.isArray(response.data.data) ? response.data.data : [];
-    } catch (error) {
-      console.error("Error fetching projects:", error);
-      return rejectWithValue(error.response.data);
-    }
-  }
-);
+interface ProjectData {
+  title: string;
+  [key: string]: any;
+}
 
-export const createProject = createAsyncThunk(
+interface UpdateData {
+  [key: string]: any;
+}
+
+interface ProjectResponse {
+  data: any;
+}
+
+export const getAllProjects = createAsyncThunk<
+  ProjectData[],
+  void,
+  { rejectValue: any }
+>("project/fetchProjects", async (_, { rejectWithValue }) => {
+  try {
+    const response = await axios.get<ProjectResponse>("projects");
+    return Array.isArray(response.data.data) ? response.data.data : [];
+  } catch (error) {
+    console.error("Error fetching projects:", error);
+    return rejectWithValue(error.response.data);
+  }
+});
+
+export const createProject = createAsyncThunk<
+  ProjectData,
+  FormData,
+  { rejectValue: any }
+>(
   "project/createProject",
-  async (projectData: FormData, { rejectWithValue }) => {
+  async (projectData, { dispatch, rejectWithValue }) => {
     try {
-      const response = await axios.post("projects", projectData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      const response = await axios.post<ProjectResponse>(
+        "projects",
+        projectData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
       toast.success("Project created successfully");
+      dispatch(
+        createRecentActivity({
+          type: "project",
+          description: `Project created: ${projectData.get("title")}`,
+        })
+      );
       return response.data.data;
     } catch (error) {
       console.error("Error creating project:", error);
@@ -39,12 +68,24 @@ export const createProject = createAsyncThunk(
   }
 );
 
-export const getProject = createAsyncThunk(
+export const getProject = createAsyncThunk<
+  ProjectData,
+  ProjectProps,
+  { rejectValue: any }
+>(
   "project/getProject",
-  async (props: ProjectProps, { rejectWithValue }) => {
+  async ({ projectId }, { dispatch, rejectWithValue }) => {
     try {
-      const response = await axios.get(`projects/${props.projectId}`);
-      return response.data;
+      const response = await axios.get<ProjectResponse>(
+        `projects/${projectId}`
+      );
+      dispatch(
+        createRecentActivity({
+          type: "project",
+          description: `Fetched project: ${projectId}`,
+        })
+      );
+      return response.data.data;
     } catch (error) {
       console.error("Error fetching project:", error);
       return rejectWithValue(error.response.data);
@@ -52,14 +93,24 @@ export const getProject = createAsyncThunk(
   }
 );
 
-export const updateProject = createAsyncThunk(
+export const updateProject = createAsyncThunk<
+  ProjectData,
+  { projectId: string; updateData: UpdateData },
+  { rejectValue: any }
+>(
   "project/updateProject",
-  async (
-    { projectId, updateData }: { projectId: string; updateData: any },
-    { rejectWithValue }
-  ) => {
+  async ({ projectId, updateData }, { dispatch, rejectWithValue }) => {
     try {
-      const response = await axios.patch(`projects/${projectId}`, updateData);
+      const response = await axios.patch<ProjectResponse>(
+        `projects/${projectId}`,
+        updateData
+      );
+      dispatch(
+        createRecentActivity({
+          type: "project",
+          description: `Updated project: ${projectId}`,
+        })
+      );
       return response.data.data;
     } catch (error) {
       console.error("Error updating project:", error);
@@ -68,15 +119,22 @@ export const updateProject = createAsyncThunk(
   }
 );
 
-export const deleteProject = createAsyncThunk(
-  "project/deleteProject",
-  async (projectId, { rejectWithValue }) => {
-    try {
-      await axios.delete(`projects/${projectId}`);
-      toast.success("Projects deleted successfully");
-    } catch (error) {
-      console.error("Error deleting projects:", error);
-      return rejectWithValue(error.response.data);
-    }
+export const deleteProject = createAsyncThunk<
+  void,
+  string,
+  { rejectValue: any }
+>("project/deleteProject", async (projectId, { dispatch, rejectWithValue }) => {
+  try {
+    await axios.delete(`projects/${projectId}`);
+    toast.success("Project deleted successfully");
+    dispatch(
+      createRecentActivity({
+        type: "project",
+        description: `Deleted project: ${projectId}`,
+      })
+    );
+  } catch (error) {
+    console.error("Error deleting project:", error);
+    return rejectWithValue(error.response.data);
   }
-);
+});

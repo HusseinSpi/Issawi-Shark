@@ -4,8 +4,8 @@
   "description": "A site for reviewing projects",
   "main": "server.js",
   "scripts": {
-    "start": "nodemon server.js",
-    "start:prod": "cross-env NODE_ENV=production nodemon server.js",
+    "start": "cross-env NODE_ENV=development nodemon server.js",
+    "start:prod": "nodemon server.js",
     "debug": "ndb scripts.js"
   },
   "author": "Hussein Khalil",
