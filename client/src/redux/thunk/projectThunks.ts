@@ -1,5 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "../../axiosConfig";
+import axios, { AxiosError } from "../../axiosConfig";
 import { toast } from "react-toastify";
 import { createRecentActivity } from "./recentActivityThunks";
 
@@ -30,9 +30,10 @@ export const getAllProjects = createAsyncThunk<
   try {
     const response = await axios.get<ProjectResponse>("projects");
     return Array.isArray(response.data.data) ? response.data.data : [];
-  } catch (error) {
+  } catch (err) {
+    const error = err as AxiosError;
     console.error("Error fetching projects:", error);
-    return rejectWithValue(error.response.data);
+    return rejectWithValue(error.response?.data);
   }
 });
 
@@ -61,9 +62,10 @@ export const createProject = createAsyncThunk<
         })
       );
       return response.data.data;
-    } catch (error) {
+    } catch (err) {
+      const error = err as AxiosError;
       console.error("Error creating project:", error);
-      return rejectWithValue(error.response.data);
+      return rejectWithValue(error.response?.data);
     }
   }
 );
@@ -86,9 +88,10 @@ export const getProject = createAsyncThunk<
         })
       );
       return response.data.data;
-    } catch (error) {
+    } catch (err) {
+      const error = err as AxiosError;
       console.error("Error fetching project:", error);
-      return rejectWithValue(error.response.data);
+      return rejectWithValue(error.response?.data);
     }
   }
 );
@@ -112,9 +115,10 @@ export const updateProject = createAsyncThunk<
         })
       );
       return response.data.data;
-    } catch (error) {
+    } catch (err) {
+      const error = err as AxiosError;
       console.error("Error updating project:", error);
-      return rejectWithValue(error.response.data);
+      return rejectWithValue(error.response?.data);
     }
   }
 );
@@ -133,8 +137,9 @@ export const deleteProject = createAsyncThunk<
         description: `Deleted project: ${projectId}`,
       })
     );
-  } catch (error) {
+  } catch (err) {
+    const error = err as AxiosError;
     console.error("Error deleting project:", error);
-    return rejectWithValue(error.response.data);
+    return rejectWithValue(error.response?.data);
   }
 });
