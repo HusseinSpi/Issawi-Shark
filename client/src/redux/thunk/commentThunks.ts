@@ -5,6 +5,17 @@ import { createRecentActivity } from "./recentActivityThunks";
 
 axios.defaults.withCredentials = true;
 
+interface CommentData {
+  id?: string;
+  content: string;
+}
+
+interface AxiosError {
+  response: {
+    data: any;
+  };
+}
+
 export const getAllComments = createAsyncThunk(
   "comment/fetchComment",
   async (_, { rejectWithValue }) => {
@@ -13,14 +24,15 @@ export const getAllComments = createAsyncThunk(
       return response.data.data;
     } catch (error) {
       console.error("Error fetching comments:", error);
-      return rejectWithValue(error.response.data);
+      const axiosError = error as AxiosError;
+      return rejectWithValue(axiosError.response.data);
     }
   }
 );
 
 export const createComment = createAsyncThunk(
   "comment/createComment",
-  async (commentData, { dispatch, rejectWithValue }) => {
+  async (commentData: CommentData, { dispatch, rejectWithValue }) => {
     try {
       const response = await axios.post("comments", commentData);
       toast.success("Comment created successfully");
@@ -33,14 +45,15 @@ export const createComment = createAsyncThunk(
       return response.data;
     } catch (error) {
       toast.error("Failed to create comment");
-      return rejectWithValue(error.response.data);
+      const axiosError = error as AxiosError;
+      return rejectWithValue(axiosError.response.data);
     }
   }
 );
 
 export const updateComment = createAsyncThunk(
   "comments/updateComment",
-  async (commentData, { dispatch, rejectWithValue }) => {
+  async (commentData: CommentData, { dispatch, rejectWithValue }) => {
     try {
       const response = await axios.put(
         `/comments/${commentData.id}`,
@@ -56,14 +69,15 @@ export const updateComment = createAsyncThunk(
       return response.data;
     } catch (error) {
       toast.error("Failed to update comment");
-      return rejectWithValue(error.response.data);
+      const axiosError = error as AxiosError;
+      return rejectWithValue(axiosError.response.data);
     }
   }
 );
 
 export const likeComment = createAsyncThunk(
   "comments/likeComment",
-  async (commentId, { dispatch, rejectWithValue }) => {
+  async (commentId: string, { dispatch, rejectWithValue }) => {
     try {
       const response = await axios.put(`/comments/${commentId}/like`);
       dispatch(
@@ -75,14 +89,15 @@ export const likeComment = createAsyncThunk(
       return response.data;
     } catch (error) {
       toast.error("Failed to like comment");
-      return rejectWithValue(error.response.data);
+      const axiosError = error as AxiosError;
+      return rejectWithValue(axiosError.response.data);
     }
   }
 );
 
 export const deleteComment = createAsyncThunk(
   "comments/deleteComment",
-  async (commentId, { dispatch, rejectWithValue }) => {
+  async (commentId: string, { dispatch, rejectWithValue }) => {
     try {
       await axios.delete(`/comments/${commentId}`);
       dispatch(
@@ -94,7 +109,8 @@ export const deleteComment = createAsyncThunk(
       toast.success("Comment deleted successfully");
     } catch (error) {
       toast.error("Failed to delete comment");
-      return rejectWithValue(error.response.data);
+      const axiosError = error as AxiosError;
+      return rejectWithValue(axiosError.response.data);
     }
   }
 );
