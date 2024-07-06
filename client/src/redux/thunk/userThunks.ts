@@ -1,4 +1,4 @@
-import { createAsyncThunk } from "@reduxjs/toolkit";
+import { createAsyncThunk, AsyncThunkConfig } from "@reduxjs/toolkit";
 import axios from "../../axiosConfig";
 import { toast } from "react-toastify";
 import { createRecentActivity } from "./recentActivityThunks";
@@ -21,34 +21,34 @@ interface UpdatePasswordArgs {
   newPassword: string;
 }
 
-export const fetchUsersData = createAsyncThunk(
+export const fetchUsersData = createAsyncThunk<any, void, AsyncThunkConfig>(
   "user/fetchUsersData",
-  async (_, { dispatch, rejectWithValue }) => {
+  async (_, { rejectWithValue }) => {
     try {
       const response = await axios.get("users");
       const users = response.data;
       return users;
-    } catch (error) {
+    } catch (error: any) {
       toast.error("Failed to fetch users data");
       return rejectWithValue(error.response?.data || error.message);
     }
   }
 );
 
-export const getCurrentUser = createAsyncThunk(
+export const getCurrentUser = createAsyncThunk<any, void, AsyncThunkConfig>(
   "user/getCurrentUser",
-  async (_, { dispatch, rejectWithValue }) => {
+  async (_, { rejectWithValue }) => {
     try {
       const response = await axios.get("users/me");
       return response.data;
-    } catch (error) {
+    } catch (error: any) {
       toast.error("Failed to get current user");
       return rejectWithValue(error.response?.data || error.message);
     }
   }
 );
 
-export const getUserById = createAsyncThunk(
+export const getUserById = createAsyncThunk<any, string, AsyncThunkConfig>(
   "user/getUser",
   async (userId: string, { dispatch, rejectWithValue }) => {
     try {
@@ -60,14 +60,33 @@ export const getUserById = createAsyncThunk(
         })
       );
       return response.data;
-    } catch (error) {
+    } catch (error: any) {
       toast.error("Failed to get user");
       return rejectWithValue(error.response?.data || error.message);
     }
   }
 );
 
-export const signUpUser = createAsyncThunk(
+export const signUpUser = createAsyncThunk<
+  any,
+  {
+    userName: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+    password: string;
+    passwordConfirm: string;
+    photo: string;
+    age: number;
+    github: string;
+    about: string;
+    facebook?: string;
+    twitter?: string;
+    linkedin?: string;
+    instagram?: string;
+  },
+  AsyncThunkConfig
+>(
   "user/signUpUser",
   async (
     {
@@ -85,21 +104,6 @@ export const signUpUser = createAsyncThunk(
       twitter,
       linkedin,
       instagram,
-    }: {
-      userName: string;
-      firstName: string;
-      lastName: string;
-      email: string;
-      password: string;
-      passwordConfirm: string;
-      photo: string;
-      age: number;
-      github: string;
-      about: string;
-      facebook?: string;
-      twitter?: string;
-      linkedin?: string;
-      instagram?: string;
     },
     { dispatch, rejectWithValue }
   ) => {
@@ -137,12 +141,13 @@ export const signUpUser = createAsyncThunk(
   }
 );
 
-export const loginUser = createAsyncThunk(
+export const loginUser = createAsyncThunk<
+  any,
+  { email: string; password: string },
+  AsyncThunkConfig
+>(
   "user/loginUser",
-  async (
-    { email, password }: { email: string; password: string },
-    { dispatch, rejectWithValue }
-  ) => {
+  async ({ email, password }, { dispatch, rejectWithValue }) => {
     const data = { email, password };
     try {
       const response = await axios.post("users/login", data);
@@ -155,16 +160,16 @@ export const loginUser = createAsyncThunk(
       );
       window.location.reload();
       return response.data;
-    } catch (error) {
+    } catch (error: any) {
       toast.error("Login failed");
       return rejectWithValue(error.response?.data || error.message);
     }
   }
 );
 
-export const updateUser = createAsyncThunk(
+export const updateUser = createAsyncThunk<any, any, AsyncThunkConfig>(
   "user/updateUser",
-  async (userData: any, { dispatch, rejectWithValue }) => {
+  async (userData, { dispatch, rejectWithValue }) => {
     try {
       const response = await axios.patch("users/updateMe", userData);
       dispatch(
@@ -174,37 +179,42 @@ export const updateUser = createAsyncThunk(
         })
       );
       return response.data.data.user;
-    } catch (error) {
+    } catch (error: any) {
       return rejectWithValue(error.response?.data || error.message);
     }
   }
 );
 
-export const forgotPassword = createAsyncThunk(
-  "user/forgotPassword",
-  async ({ email }: ForgotPasswordPayload, { dispatch, rejectWithValue }) => {
-    const data = { email };
-    try {
-      const response = await axios.post("users/forgotPassword", data);
-      toast.success("Password reset email sent");
-      dispatch(
-        createRecentActivity({
-          type: "user",
-          description: `Password reset email sent to: ${email}`,
-        })
-      );
-      return response.data;
-    } catch (error) {
-      toast.error("Failed to send password reset email");
-      return rejectWithValue(error.response?.data || error.message);
-    }
+export const forgotPassword = createAsyncThunk<
+  any,
+  ForgotPasswordPayload,
+  AsyncThunkConfig
+>("user/forgotPassword", async ({ email }, { dispatch, rejectWithValue }) => {
+  const data = { email };
+  try {
+    const response = await axios.post("users/forgotPassword", data);
+    toast.success("Password reset email sent");
+    dispatch(
+      createRecentActivity({
+        type: "user",
+        description: `Password reset email sent to: ${email}`,
+      })
+    );
+    return response.data;
+  } catch (error: any) {
+    toast.error("Failed to send password reset email");
+    return rejectWithValue(error.response?.data || error.message);
   }
-);
+});
 
-export const resetPassword = createAsyncThunk(
+export const resetPassword = createAsyncThunk<
+  any,
+  ResetPasswordData,
+  AsyncThunkConfig
+>(
   "user/resetPassword",
   async (
-    { resetToken, password, passwordConfirm }: ResetPasswordData,
+    { resetToken, password, passwordConfirm },
     { dispatch, rejectWithValue }
   ) => {
     const data = { password, passwordConfirm };
@@ -221,17 +231,21 @@ export const resetPassword = createAsyncThunk(
         })
       );
       return response.data;
-    } catch (error) {
+    } catch (error: any) {
       toast.error("Failed to reset password");
       return rejectWithValue(error.response?.data || error.message);
     }
   }
 );
 
-export const updatePassword = createAsyncThunk(
+export const updatePassword = createAsyncThunk<
+  any,
+  UpdatePasswordArgs,
+  AsyncThunkConfig
+>(
   "user/updatePassword",
   async (
-    { currentPassword, password, newPassword }: UpdatePasswordArgs,
+    { currentPassword, password, newPassword },
     { dispatch, rejectWithValue }
   ) => {
     try {
