@@ -1,7 +1,7 @@
-import { createAsyncThunk, AsyncThunkConfig } from "@reduxjs/toolkit";
+import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "../../axiosConfig";
 import { toast } from "react-toastify";
-import { createRecentActivity } from "./recentActivityThunks";
+import { createRecentActivity as createActivity } from "./recentActivityThunks";
 
 axios.defaults.withCredentials = true;
 
@@ -21,13 +21,17 @@ interface UpdatePasswordArgs {
   newPassword: string;
 }
 
-export const fetchUsersData = createAsyncThunk<any, void, AsyncThunkConfig>(
+interface User {
+  id: string;
+  username: string;
+}
+
+export const fetchUsersData = createAsyncThunk<User[], void>(
   "user/fetchUsersData",
   async (_, { rejectWithValue }) => {
     try {
       const response = await axios.get("users");
-      const users = response.data;
-      return users;
+      return response.data;
     } catch (error: any) {
       toast.error("Failed to fetch users data");
       return rejectWithValue(error.response?.data || error.message);
@@ -35,7 +39,7 @@ export const fetchUsersData = createAsyncThunk<any, void, AsyncThunkConfig>(
   }
 );
 
-export const getCurrentUser = createAsyncThunk<any, void, AsyncThunkConfig>(
+export const getCurrentUser = createAsyncThunk<User, void>(
   "user/getCurrentUser",
   async (_, { rejectWithValue }) => {
     try {
@@ -48,13 +52,13 @@ export const getCurrentUser = createAsyncThunk<any, void, AsyncThunkConfig>(
   }
 );
 
-export const getUserById = createAsyncThunk<any, string, AsyncThunkConfig>(
+export const getUserById = createAsyncThunk<User, string>(
   "user/getUser",
   async (userId: string, { dispatch, rejectWithValue }) => {
     try {
       const response = await axios.get(`users/profile/${userId}`);
       dispatch(
-        createRecentActivity({
+        createActivity({
           type: "user",
           description: `Fetched user: ${userId}`,
         })
@@ -68,7 +72,7 @@ export const getUserById = createAsyncThunk<any, string, AsyncThunkConfig>(
 );
 
 export const signUpUser = createAsyncThunk<
-  any,
+  User,
   {
     userName: string;
     firstName: string;
@@ -84,8 +88,7 @@ export const signUpUser = createAsyncThunk<
     twitter?: string;
     linkedin?: string;
     instagram?: string;
-  },
-  AsyncThunkConfig
+  }
 >(
   "user/signUpUser",
   async (
@@ -127,7 +130,7 @@ export const signUpUser = createAsyncThunk<
       const response = await axios.post("users/signup", data);
       toast.success("Signup successful!");
       dispatch(
-        createRecentActivity({
+        createActivity({
           type: "user",
           description: `User signed up: ${userName}`,
         })
@@ -142,9 +145,8 @@ export const signUpUser = createAsyncThunk<
 );
 
 export const loginUser = createAsyncThunk<
-  any,
-  { email: string; password: string },
-  AsyncThunkConfig
+  User,
+  { email: string; password: string }
 >(
   "user/loginUser",
   async ({ email, password }, { dispatch, rejectWithValue }) => {
@@ -153,7 +155,7 @@ export const loginUser = createAsyncThunk<
       const response = await axios.post("users/login", data);
       toast.success("Login successful!");
       dispatch(
-        createRecentActivity({
+        createActivity({
           type: "user",
           description: `User logged in: ${email}`,
         })
@@ -167,13 +169,13 @@ export const loginUser = createAsyncThunk<
   }
 );
 
-export const updateUser = createAsyncThunk<any, any, AsyncThunkConfig>(
+export const updateUser = createAsyncThunk<User, Partial<User>>(
   "user/updateUser",
   async (userData, { dispatch, rejectWithValue }) => {
     try {
       const response = await axios.patch("users/updateMe", userData);
       dispatch(
-        createRecentActivity({
+        createActivity({
           type: "user",
           description: `User updated: ${userData.username}`,
         })
@@ -185,33 +187,28 @@ export const updateUser = createAsyncThunk<any, any, AsyncThunkConfig>(
   }
 );
 
-export const forgotPassword = createAsyncThunk<
-  any,
-  ForgotPasswordPayload,
-  AsyncThunkConfig
->("user/forgotPassword", async ({ email }, { dispatch, rejectWithValue }) => {
-  const data = { email };
-  try {
-    const response = await axios.post("users/forgotPassword", data);
-    toast.success("Password reset email sent");
-    dispatch(
-      createRecentActivity({
-        type: "user",
-        description: `Password reset email sent to: ${email}`,
-      })
-    );
-    return response.data;
-  } catch (error: any) {
-    toast.error("Failed to send password reset email");
-    return rejectWithValue(error.response?.data || error.message);
+export const forgotPassword = createAsyncThunk<any, ForgotPasswordPayload>(
+  "user/forgotPassword",
+  async ({ email }, { dispatch, rejectWithValue }) => {
+    const data = { email };
+    try {
+      const response = await axios.post("users/forgotPassword", data);
+      toast.success("Password reset email sent");
+      dispatch(
+        createActivity({
+          type: "user",
+          description: `Password reset email sent to: ${email}`,
+        })
+      );
+      return response.data;
+    } catch (error: any) {
+      toast.error("Failed to send password reset email");
+      return rejectWithValue(error.response?.data || error.message);
+    }
   }
-});
+);
 
-export const resetPassword = createAsyncThunk<
-  any,
-  ResetPasswordData,
-  AsyncThunkConfig
->(
+export const resetPassword = createAsyncThunk<any, ResetPasswordData>(
   "user/resetPassword",
   async (
     { resetToken, password, passwordConfirm },
@@ -225,7 +222,7 @@ export const resetPassword = createAsyncThunk<
       );
       toast.success("Password reset successful");
       dispatch(
-        createRecentActivity({
+        createActivity({
           type: "user",
           description: `Password reset with token: ${resetToken}`,
         })
@@ -238,11 +235,7 @@ export const resetPassword = createAsyncThunk<
   }
 );
 
-export const updatePassword = createAsyncThunk<
-  any,
-  UpdatePasswordArgs,
-  AsyncThunkConfig
->(
+export const updatePassword = createAsyncThunk<any, UpdatePasswordArgs>(
   "user/updatePassword",
   async (
     { currentPassword, password, newPassword },
@@ -255,7 +248,7 @@ export const updatePassword = createAsyncThunk<
         passwordConfirm: newPassword,
       });
       dispatch(
-        createRecentActivity({
+        createActivity({
           type: "user",
           description: `User password updated`,
         })
