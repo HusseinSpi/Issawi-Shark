@@ -9,7 +9,7 @@ export const Footer: FC = () => {
         <div className="lg:flex lg:items-start lg:gap-8">
           <img
             className="w-1/12"
-            src="https://www.logomaker.com/api/main/images/1j+ojFVDOMkX9Wytexe43D6kh...GIqBNNmRnJwXs1M3EMoAJtlyEkg...pj8fgy"
+            src="https://www.logomaker.com/api/main/images/1j+ojFVDOMkX9Wytexe43D6kh...GIqxJNmBnJwXs1M3EMoAJtlyIthPNq9PU5"
             alt="logo"
           />
 
@@ -41,7 +41,7 @@ export const Footer: FC = () => {
                     className="w-full border-none sm:text-sm h-12 p-3"
                   />
 
-                  <button className="mt-1 w-full bg-secondaryColor px-6 py-3 text-sm font-bold uppercase tracking-wide text-white transition-none hover:bg-teal-600 sm:mt-0 sm:w-auto sm:shrink-0">
+                  <button className="mt-1 w-full bg-primaryColor px-6 py-3 text-sm font-bold uppercase tracking-wide text-white transition-none hover:bg-thirdColor sm:mt-0 sm:w-auto sm:shrink-0">
                     Sign Up
                   </button>
                 </div>

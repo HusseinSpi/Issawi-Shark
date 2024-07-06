@@ -8,6 +8,7 @@ export default {
         secondaryColor: "#EEEEEE",
         thirdColor: "#DC5F00",
         fourColor: "#686D76",
+        thirdColorO: "#DC5F00",
       },
     },
   },

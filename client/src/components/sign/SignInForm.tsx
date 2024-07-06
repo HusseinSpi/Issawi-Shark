@@ -35,7 +35,9 @@ const SignInForm: React.FC = () => {
       onSubmit={handleSubmit}
       className="mb-0 mt-6 space-y-4 rounded-lg p-4 shadow-lg sm:p-6 lg:p-8"
     >
-      <p className="text-center text-lg font-medium">Sign in to your account</p>
+      <p className="text-center text-lg font-medium text-thirdColor">
+        Sign in to your account
+      </p>
 
       <div>
         <label htmlFor="email" className="sr-only">
@@ -86,7 +88,7 @@ const SignInForm: React.FC = () => {
 
       <button
         type="submit"
-        className="block w-full rounded-lg bg-blue-600 px-5 py-3 text-sm font-medium text-white"
+        className="block w-full rounded-lg bg-thirdColorO px-5 py-3 text-sm font-medium text-white"
       >
         Sign in
       </button>

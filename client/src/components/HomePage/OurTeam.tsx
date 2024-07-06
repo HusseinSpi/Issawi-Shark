@@ -61,7 +61,7 @@ const OurTeam: FC = () => {
                     <h3 className="text-base font-semibold leading-7 tracking-tight text-primaryColor">
                       {person.userName}
                     </h3>
-                    <p className="text-sm font-semibold leading-6 text-secondaryColor">
+                    <p className="text-sm font-semibold leading-6 text-thirdColor">
                       {person.role}
                     </p>
                   </div>

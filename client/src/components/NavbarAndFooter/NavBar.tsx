@@ -8,15 +8,16 @@ const NavBar: FC = () => {
       <div className="container mx-auto flex justify-between items-center p-6">
         <img
           className="w-1/12"
-          src="https://www.logomaker.com/api/main/images/1j+ojFVDOMkX9Wytexe43D6kh...GIqBNNmRnJwXs1M3EMoAJtlyEkg...pj8fgy"
+          src="https://www.logomaker.com/api/main/images/1j+ojFVDOMkX9Wytexe43D6kh...GIqxJNmBnJwXs1M3EMoAJtlyIthPNq9PU5"
           alt="logo"
+          onClick={() => navigate("/")}
         />
         <nav className="space-x-4">
           <NavLink
             to="/"
             className={({ isActive }) =>
               isActive
-                ? "font-bold bg-thirdColor p-3 text-secondaryColor rounded-lg"
+                ? "font-bold bg-thirdColor p-3 text-primaryColor rounded-lg"
                 : "hover:underline"
             }
           >
@@ -26,7 +27,7 @@ const NavBar: FC = () => {
             to="/general"
             className={({ isActive }) =>
               isActive
-                ? "font-bold bg-thirdColor p-3 text-secondaryColor rounded-lg"
+                ? "font-bold bg-thirdColor p-3 text-primaryColor rounded-lg"
                 : "hover:underline"
             }
           >
@@ -36,27 +37,17 @@ const NavBar: FC = () => {
             to="/services"
             className={({ isActive }) =>
               isActive
-                ? "font-bold bg-thirdColor p-3 text-secondaryColor rounded-lg"
+                ? "font-bold bg-thirdColor p-3 text-primaryColor rounded-lg"
                 : "hover:underline"
             }
           >
             Services
           </NavLink>
           <NavLink
-            to="/news"
-            className={({ isActive }) =>
-              isActive
-                ? "font-bold bg-thirdColor p-3 text-secondaryColor rounded-lg"
-                : "hover:underline"
-            }
-          >
-            News
-          </NavLink>
-          <NavLink
             to="/about-us"
             className={({ isActive }) =>
               isActive
-                ? "font-bold bg-thirdColor p-3 text-secondaryColor rounded-lg"
+                ? "font-bold bg-thirdColor p-3 text-primaryColor rounded-lg"
                 : "hover:underline"
             }
           >

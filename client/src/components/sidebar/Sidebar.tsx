@@ -13,14 +13,14 @@ const Sidebar: FC<SidebarAndFooterProps> = ({ children }) => {
     <div className="flex h-full">
       <div className="fixed top-0 left-0 h-full bg-primaryColor w-64 flex flex-col justify-between">
         <div className="py-6">
-          <span className="ml-5 grid h-10 w-32 place-content-center rounded-lg bg-gray-100 text-xs text-secondaryColor">
+          <span className="ml-16 grid h-10 w-32 place-content-center rounded-lg bg-transparent">
             <img
               className="w-4/6"
-              src="https://www.logomaker.com/api/main/images/1j+ojFVDOMkX9Wytexe43D6kh...GIqBNNmRnJwXs1M3EMoAJtlyEkg...pj8fgy"
+              src="https://www.logomaker.com/api/main/images/1j+ojFVDOMkX9Wytexe43D6kh...GIqxJNmBnJwXs1M3EMoAJtlyIthPNq9PU5"
               alt="logo"
             />
           </span>
-          <ul className="mt-6 space-y-1">
+          <ul className="mt-10 space-y-1">
             <li>
               <NavLink
                 to="/general"

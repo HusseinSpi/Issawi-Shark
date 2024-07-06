@@ -50,7 +50,6 @@ const AddProject: React.FC = () => {
   const [technologies, setTechnologies] = useState<string>("");
   const [projectStatus, setProjectStatus] = useState<string>("pending");
   const [images, setImages] = useState<File[]>([]);
-  const [contactInfo, setContactInfo] = useState<string>("");
 
   const allUsers: User[] = usersData?.data?.users || [];
 
@@ -74,13 +73,15 @@ const AddProject: React.FC = () => {
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
-      setImages(Array.from(e.target.files));
+      setImages((prevImages) => [...prevImages, ...Array.from(e.target.files)]);
     }
   };
 
-  const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault();
+  const handleRemoveImage = (index: number) => {
+    setImages((prevImages) => prevImages.filter((_, i) => i !== index));
+  };
 
+  const prepareFormData = () => {
     const formData = new FormData();
     formData.append("title", projectTitle);
     formData.append("description", description);
@@ -93,11 +94,21 @@ const AddProject: React.FC = () => {
     formData.append("status", projectStatus);
     formData.append("owner", currentUser._id);
     selectedUsers.forEach((user) => formData.append("teamMembers", user._id));
-    formData.append("contactInfo", contactInfo);
     images.forEach((image) => formData.append("images", image));
 
-    dispatch(createProject(formData));
-    navigate("/project");
+    return formData;
+  };
+
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    const formData = prepareFormData();
+
+    try {
+      await dispatch(createProject(formData));
+      navigate("/project");
+    } catch (error) {
+      console.error("Failed to create project:", error);
+    }
   };
 
   return (
@@ -204,14 +215,24 @@ const AddProject: React.FC = () => {
           />
         </div>
 
-        <FormInput
-          id="contactInfo"
-          label="Contact Information or Address"
-          type="text"
-          value={contactInfo}
-          onChange={(e) => setContactInfo(e.target.value)}
-          required
-        />
+        <div className="mb-4 grid grid-cols-3 gap-4">
+          {images.map((image, index) => (
+            <div key={index} className="relative">
+              <img
+                src={URL.createObjectURL(image)}
+                alt={`preview-${index}`}
+                className="w-full h-24 object-cover rounded-md"
+              />
+              <button
+                type="button"
+                className="absolute top-0 right-0 bg-red-600 text-white p-1 rounded-full"
+                onClick={() => handleRemoveImage(index)}
+              >
+                X
+              </button>
+            </div>
+          ))}
+        </div>
 
         <button
           type="submit"

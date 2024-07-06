@@ -119,7 +119,7 @@ const ProjectDisplay: React.FC = () => {
                   key={index}
                   src={`http://localhost:8000${image}`}
                   alt={`Project Image ${index + 1}`}
-                  className="w-full h-auto rounded-lg shadow-lg"
+                  className="w-full h-auto rounded-lg shadow-lg my-10"
                 />
               ))}
             </div>

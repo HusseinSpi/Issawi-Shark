@@ -1,4 +1,9 @@
-import { FC } from "react";
+import { FC, useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchUsersData } from "../../redux/thunk/userThunks";
+import { getAllProjects } from "../../redux/thunk/projectThunks";
+import { getAllComments } from "../../redux/thunk/commentThunks";
+import { RootState } from "../../redux/store";
 
 interface Stat {
   id: number;
@@ -7,25 +12,43 @@ interface Stat {
 }
 
 const Stats: FC = () => {
-  const stats: Stat[] = [
-    { id: 1, name: "Transactions every 24 hours", value: "44 million" },
-    { id: 2, name: "Assets under holding", value: "$119 trillion" },
-    { id: 3, name: "New users annually", value: "46,000" },
-  ];
+  const dispatch = useDispatch();
+  const [stats, setStats] = useState<Stat[]>([]);
+
+  const users = useSelector((state: RootState) => state.user);
+  const projects = useSelector((state: RootState) => state.project);
+  const comments = useSelector((state: RootState) => state.comment);
+
+  useEffect(() => {
+    dispatch(fetchUsersData());
+    dispatch(getAllProjects());
+    dispatch(getAllComments());
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (users.data?.data?.users && projects.data && comments.data) {
+      setStats([
+        {
+          id: 1,
+          name: "Users",
+          value: users.data.data.users.length.toString(),
+        },
+        { id: 2, name: "Projects", value: projects.data.length.toString() },
+        { id: 3, name: "Comments", value: comments.data.length.toString() },
+      ]);
+    }
+  }, [users, projects, comments]);
 
   return (
     <section className="bg-thirdColor py-24 sm:py-32">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <dl className="grid grid-cols-1 gap-x-8 gap-y-16 text-center lg:grid-cols-3">
           {stats.map((stat) => (
-            <div
-              key={stat.id}
-              className="mx-auto flex max-w-xs flex-col gap-y-4"
-            >
-              <dt className="text-base leading-7 text-primaryColor">
+            <div key={stat.id} className="flex flex-col">
+              <dt className="text-lg font-medium leading-6 text-gray-900">
                 {stat.name}
               </dt>
-              <dd className="order-first text-3xl font-semibold tracking-tight text-primaryColor sm:text-5xl">
+              <dd className="mt-2 text-5xl font-extrabold text-primaryColor">
                 {stat.value}
               </dd>
             </div>

@@ -14,13 +14,13 @@ import Sidebar from "./components/sidebar/Sidebar";
 import Account from "./pages/Account/Account";
 import Teams from "./pages/Teams/Teams";
 import MyProject from "./pages/MyProject/MyProject";
-import Message from "./pages/message/Message";
 import { SignUpPage } from "./pages/Signup/Signup";
 import { SignInPage } from "./pages/Login/Login";
 import ProjectDisplay from "./pages/ProjectPage/ProjectDisplay";
 import AddProject from "./components/addProject/AddProject";
 import ForgotPasswordPage from "./pages/ForgotPasword/ForgotPassword";
 import ResetPassword from "./pages/ForgotPasword/ResetPassword";
+import AboutUs from "./pages/AboutUs/AboutUs";
 
 const App: React.FC = () => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
@@ -137,16 +137,6 @@ const App: React.FC = () => {
         <PrivateRouteTwo>
           <Sidebar>
             <AddProject />
-          </Sidebar>
-        </PrivateRouteTwo>
-      ),
-    },
-    {
-      path: "message",
-      element: (
-        <PrivateRouteTwo>
-          <Sidebar>
-            <Message />
           </Sidebar>
         </PrivateRouteTwo>
       ),

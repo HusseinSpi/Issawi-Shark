@@ -29,7 +29,7 @@ const AccountProfile: FC<AccountProfileProps> = ({ userDetails }) => {
         </div>
         <div className="bg-gray-100 p-4 rounded-lg">
           <h3 className="text-lg font-bold mb-2">To communicate</h3>
-          <div className="flex-col justify-center space-x-4">
+          <div className="flex justify-center space-x-4">
             {userDetails.github && (
               <a
                 href={userDetails.github}

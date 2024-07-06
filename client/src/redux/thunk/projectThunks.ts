@@ -67,3 +67,16 @@ export const updateProject = createAsyncThunk(
     }
   }
 );
+
+export const deleteProject = createAsyncThunk(
+  "project/deleteProject",
+  async (projectId, { rejectWithValue }) => {
+    try {
+      await axios.delete(`projects/${projectId}`);
+      toast.success("Projects deleted successfully");
+    } catch (error) {
+      console.error("Error deleting projects:", error);
+      return rejectWithValue(error.response.data);
+    }
+  }
+);

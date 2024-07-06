@@ -4,7 +4,7 @@ import {
   createProject,
   getProject,
   updateProject,
-  getPhoto,
+  deleteProject,
 } from "../thunk/projectThunks";
 
 const initialState = {
@@ -63,6 +63,16 @@ const projectSlice = createSlice({
       .addCase(updateProject.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.payload as string;
+      })
+      .addCase(deleteProject.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.data = state.data.filter(
+          (project) => project.id !== action.payload
+        );
+      })
+      .addCase(deleteProject.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload;
       });
   },
 });

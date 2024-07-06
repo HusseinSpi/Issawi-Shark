@@ -105,3 +105,14 @@ exports.updateProjectRating = catchAsync(async (req, res, next) => {
     data: project,
   });
 });
+
+exports.deleteProject = catchAsync(async (req, res, next) => {
+  const deletedProject = await Project.findByIdAndDelete(req.params.id);
+  if (!deletedProject) {
+    return next(new AppError("No project found with that ID", 404));
+  }
+  res.status(204).json({
+    status: "success",
+    data: null,
+  });
+});

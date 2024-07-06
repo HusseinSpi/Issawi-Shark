@@ -3,14 +3,17 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchUsersData } from "../../redux/thunk/userThunks";
 import { RootState } from "../../redux/store/store";
 import ProgramsNavBar from "../../components/Programs/ProgramsNavBar";
+import { useNavigate } from "react-router-dom";
 
 interface User {
+  _id: string;
   userName: string;
   role: string;
   photo: string;
 }
 
 const Teams = () => {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const {
     data: users,
@@ -25,6 +28,7 @@ const Teams = () => {
   const people: User[] = (users?.data?.users || [])
     .filter((user: User) => user.role === "investor")
     .map((user: User) => ({
+      _id: user._id,
       userName: user.userName,
       role: user.role,
       photo: user.photo,
@@ -47,6 +51,7 @@ const Teams = () => {
               <div
                 key={person.userName}
                 className="m-4 text-center transform hover:scale-105 transition-transform"
+                onClick={() => navigate(`/profile/${person._id}`)}
               >
                 <img
                   className="w-36 h-36 rounded-full object-cover mx-auto"

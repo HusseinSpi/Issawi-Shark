@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 const GetStarted: FC = () => {
   const navigate = useNavigate();
   return (
-    <section className="bg-secondaryColor text-white py-20">
+    <section className="bg-primaryColor text-secondaryColor py-20">
       <div className="container mx-auto text-center">
         <h3 className="text-3xl font-bold mb-4 slide-in-up">
           Get Started With InvestPro
@@ -14,7 +14,7 @@ const GetStarted: FC = () => {
           discounts by getting started.
         </p>
         <button
-          className="bg-thirdColor text-secondaryColor py-2 px-4 rounded hover-bounce"
+          className="bg-thirdColor text-primaryColor py-2 px-4 rounded hover-bounce"
           onClick={() => navigate("/sign-up")}
         >
           Get Started
